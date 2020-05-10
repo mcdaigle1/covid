@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import csv
+
 class StatePopulation:
 
     POPULATION_FILE_PATH = "/home/mdaigle/covid/data/state_population.csv"
@@ -15,10 +17,10 @@ class StatePopulation:
                 else:
                     state = row[1]
                     population = row[2]
-                    state_populations[state] = population
+                    self.state_populations[state] = population
 
-    def get_state_population(state_name):
-        if state_name in state_populations:
-            return int(state_populations[state_name])
+    def get_state_population(self, state_name):
+        if state_name in self.state_populations:
+            return int(self.state_populations[state_name])
         else:
             return 0

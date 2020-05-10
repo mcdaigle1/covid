@@ -116,10 +116,10 @@ for state_name in all_state_data:
 # rates are cumulative, so calculate daily death rates base on delta from previous day's count
 all_state_daily_deaths = {}
 for state_name in all_state_data:
-    if state_name in state_populations:
-        state_population = state_populations[state_name]
-    else:
-        state_population = 0
+#    if state_name in state_populations:
+#        state_population = state_populations[state_name]
+#    else:
+#        state_population = 0
 
     all_state_daily_deaths[state_name] = {}
     first_row = True
@@ -133,7 +133,7 @@ for state_name in all_state_data:
             daily_deaths = cum_deaths - cum_deaths_yesterday
             all_state_daily_deaths[state_name][sortable_date] = {}
             all_state_daily_deaths[state_name][sortable_date]["value"] = daily_deaths
-            all_state_daily_deaths[state_name][sortable_date]["population"] = string_util.default_zero(state_population)
+            all_state_daily_deaths[state_name][sortable_date]["population"] = str(state_populations.get_state_population(state_name))
             all_state_daily_deaths[state_name][sortable_date]["epoch_date"] = state_data[sortable_date]["epoch_date"]
             cum_deaths_yesterday = cum_deaths
 
