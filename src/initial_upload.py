@@ -5,6 +5,7 @@ import glob
 import requests
 from datetime import datetime
 from math_util import math_util
+from date_util import date_util
 
 data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 pop_csv_path = "/home/mdaigle/covid/data/state_population.csv"
@@ -19,11 +20,6 @@ input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_
 def file_to_sortable_date(file_path):
     split_string = file_path.split('/')[-1].split('.')[0].split('-')
     return split_string[2] + split_string[0] + split_string[1]
-
-# convert a date from the file, like: 2020-04-12 23:18:15 to an epoch date representing 00:00:00 that day
-def date_to_epoch(raw_date):
-    cal_date = raw_date.split(' ')[0]
-    return  datetime.strptime(cal_date, "%Y%m%d").strftime('%s') + "000000000"
 
 def canonical(noncannonical_string):
     return noncannonical_string.replace(" ", "_") 
@@ -79,7 +75,7 @@ for input_file in input_files:
                     state_row["testing_rate"] = row[16]
                     state_row["hopitalization_rate"] = row[17]
                
-                    state_row["epoch_date"] = date_to_epoch(sortable_date)
+                    state_row["epoch_date"] = date_util.date_to_epoch(sortable_date)
 
                     state_name = row[0]
                     if state_name in all_state_data:
