@@ -7,7 +7,7 @@ class StatePopulation:
 
     def __init__(self):
         first_row = True
-        with open(POPULATION_FILE_PATH) as csv_file:
+        with open(StatePopulation.POPULATION_FILE_PATH) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
                 if first_row:
