@@ -7,6 +7,7 @@ import requests
 from math_util import math_util
 from date_util import date_util
 from file_util import file_util
+from string_util import string_util
 
 data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 pop_csv_path = "/home/mdaigle/covid/data/state_population.csv"
@@ -15,17 +16,7 @@ API_ENDPOINT = "http://localhost:8086/write?db=covid"
 all_state_data = {}
 state_populations = {}
 
-input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/*.csv")]
-
-def canonical(noncannonical_string):
-    return noncannonical_string.replace(" ", "_") 
-
-def default_zero(some_number):
-    if some_number == "":
-        return "0"
-    else:
-        return str(some_number)    
-
+input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/*.csv")]   
 
 # create state population dict from file
 first_row = True
@@ -92,27 +83,27 @@ for state_name in all_state_data:
         time_series = ""
         time_series += "state_data,"
 
-        time_series += "name=" + canonical(state_name) + ","
+        time_series += "name=" + string_util.canonical(state_name) + ","
         time_series += "country=" + state_data[sortable_date]["country"] + " "
 
         time_series += "state=\"" + state_name + "\","
-        time_series += "population=" + default_zero(state_population) + ","
+        time_series += "population=" + string_util.default_zero(state_population) + ","
         time_series += "last_update=\"" + state_data[sortable_date]["last_update"] + "\","
-        time_series += "lat=" + default_zero(state_data[sortable_date]["lat"]) + ","
-        time_series += "long=" + default_zero(state_data[sortable_date]["long"]) + ","
-        time_series += "confirmed=" + default_zero(state_data[sortable_date]["confirmed"]) + ","
-        time_series += "cum_deaths=" + default_zero(state_data[sortable_date]["cum_deaths"]) + ","
-        time_series += "recovered=" + default_zero(state_data[sortable_date]["recovered"]) + ","
-        time_series += "active=" + default_zero(state_data[sortable_date]["active"]) + ","
+        time_series += "lat=" + string_util.default_zero(state_data[sortable_date]["lat"]) + ","
+        time_series += "long=" + string_util.default_zero(state_data[sortable_date]["long"]) + ","
+        time_series += "confirmed=" + string_util.default_zero(state_data[sortable_date]["confirmed"]) + ","
+        time_series += "cum_deaths=" + string_util.default_zero(state_data[sortable_date]["cum_deaths"]) + ","
+        time_series += "recovered=" + string_util.default_zero(state_data[sortable_date]["recovered"]) + ","
+        time_series += "active=" + string_util.default_zero(state_data[sortable_date]["active"]) + ","
         time_series += "fips=" + state_data[sortable_date]["fips"] + ","
-        time_series += "incident_rate=" + default_zero(state_data[sortable_date]["incident_rate"]) + ","
-        time_series += "people_tested=" + default_zero(state_data[sortable_date]["people_tested"]) + ","
-        time_series += "people_hospitalized=" + default_zero(state_data[sortable_date]["people_hospitalized"]) + ","
-        time_series += "mortality_rate=" + default_zero(state_data[sortable_date]["mortality_rate"]) + ","
+        time_series += "incident_rate=" + string_util.default_zero(state_data[sortable_date]["incident_rate"]) + ","
+        time_series += "people_tested=" + string_util.default_zero(state_data[sortable_date]["people_tested"]) + ","
+        time_series += "people_hospitalized=" + string_util.default_zero(state_data[sortable_date]["people_hospitalized"]) + ","
+        time_series += "mortality_rate=" + string_util.default_zero(state_data[sortable_date]["mortality_rate"]) + ","
         time_series += "uid=" + state_data[sortable_date]["uid"] + ","
         time_series += "iso3=\"" + state_data[sortable_date]["iso3"] + "\","
-        time_series += "testing_rate=" + default_zero(state_data[sortable_date]["testing_rate"]) + ","
-        time_series += "hopitalization_rate=" + default_zero(state_data[sortable_date]["hopitalization_rate"]) + " "
+        time_series += "testing_rate=" + string_util.default_zero(state_data[sortable_date]["testing_rate"]) + ","
+        time_series += "hopitalization_rate=" + string_util.default_zero(state_data[sortable_date]["hopitalization_rate"]) + " "
 
         time_series += state_data[sortable_date]["epoch_date"] 
 
@@ -141,7 +132,7 @@ for state_name in all_state_data:
             daily_deaths = cum_deaths - cum_deaths_yesterday
             all_state_daily_deaths[state_name][sortable_date] = {}
             all_state_daily_deaths[state_name][sortable_date]["value"] = daily_deaths
-            all_state_daily_deaths[state_name][sortable_date]["population"] = default_zero(state_population)
+            all_state_daily_deaths[state_name][sortable_date]["population"] = string_util.default_zero(state_population)
             all_state_daily_deaths[state_name][sortable_date]["epoch_date"] = state_data[sortable_date]["epoch_date"]
             cum_deaths_yesterday = cum_deaths
 
@@ -150,7 +141,7 @@ for state_name in all_state_daily_deaths:
     for sortable_date in sorted(state_daily_deaths.keys()):
         time_series = ""
         time_series += "daily_deaths,"
-        time_series += "name=" + canonical(state_name) + " "
+        time_series += "name=" + string_util.canonical(state_name) + " "
         time_series += "population=" + str(state_daily_deaths[sortable_date]["population"]) + ","
         time_series += "value=" + str(state_daily_deaths[sortable_date]["value"]) + " "
         time_series += state_daily_deaths[sortable_date]["epoch_date"] 
@@ -173,7 +164,7 @@ for state_name in all_state_daily_deaths:
 
     time_series = ""
     time_series += "trend_daily_deaths,"
-    time_series += "name=" + canonical(state_name) + " "
+    time_series += "name=" + string_util.canonical(state_name) + " "
     time_series += "value=" + str(min_y) + " "  
     time_series += state_data[min_sortable_date]["epoch_date"] 
 
@@ -183,7 +174,7 @@ for state_name in all_state_daily_deaths:
 
     time_series = ""
     time_series += "trend_daily_deaths,"
-    time_series += "name=" + canonical(state_name) + " "
+    time_series += "name=" + string_util.canonical(state_name) + " "
     time_series += "value=" + str(max_y) + " "
     time_series += state_data[max_sortable_date]["epoch_date"]
 
