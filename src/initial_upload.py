@@ -3,9 +3,10 @@
 import csv
 import glob
 import requests
-from datetime import datetime
+#from datetime import datetime
 from math_util import math_util
 from date_util import date_util
+from file_util import file_util
 
 data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 pop_csv_path = "/home/mdaigle/covid/data/state_population.csv"
@@ -15,11 +16,6 @@ all_state_data = {}
 state_populations = {}
 
 input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/*.csv")]
-
-# extract the file time from the full input file path.
-def file_to_sortable_date(file_path):
-    split_string = file_path.split('/')[-1].split('.')[0].split('-')
-    return split_string[2] + split_string[0] + split_string[1]
 
 def canonical(noncannonical_string):
     return noncannonical_string.replace(" ", "_") 
@@ -47,7 +43,7 @@ with open(pop_csv_path) as csv_file:
 # populate state data from files
 for input_file in input_files:
     first_line = True
-    sortable_date = file_to_sortable_date(input_file)
+    sortable_date = file_util.file_to_sortable_date(input_file)
     with open(input_file) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:

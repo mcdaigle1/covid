@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 class math_util:
+
     @staticmethod
     def mean_from_state_list(state_list, key):
         list_len = len(state_list)
