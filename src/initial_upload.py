@@ -8,27 +8,28 @@ from math_util import math_util
 from date_util import date_util
 from file_util import file_util
 from string_util import string_util
+from state_population import StatePopulation
 
 data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
-pop_csv_path = "/home/mdaigle/covid/data/state_population.csv"
+# pop_csv_path = "/home/mdaigle/covid/data/state_population.csv"
 API_ENDPOINT = "http://localhost:8086/write?db=covid"
 
 all_state_data = {}
-state_populations = {}
+state_populations = StatePopulation()
 
 input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/*.csv")]   
 
 # create state population dict from file
-first_row = True
-with open(pop_csv_path) as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
-    for row in csv_reader:
-        if first_row:
-            first_row = False
-        else:
-            state = row[1]
-            population = row[2]
-            state_populations[state] = population
+# first_row = True
+# with open(pop_csv_path) as csv_file:
+#     csv_reader = csv.reader(csv_file, delimiter=',')
+#     for row in csv_reader:
+#         if first_row:
+#             first_row = False
+#         else:
+#             state = row[1]
+#             population = row[2]
+#             state_populations[state] = population
 
 
 # populate state data from files
@@ -72,10 +73,10 @@ for input_file in input_files:
                 
 
 for state_name in all_state_data:
-    if state_name in state_populations:
-        state_population = state_populations[state_name]
-    else:
-        state_population = 0
+#     if state_name in state_populations:
+#         state_population = state_populations[state_name]
+#     else:
+#         state_population = 0
 
     # print("processing state " + state_name)
     state_data = all_state_data[state_name]
@@ -87,7 +88,7 @@ for state_name in all_state_data:
         time_series += "country=" + state_data[sortable_date]["country"] + " "
 
         time_series += "state=\"" + state_name + "\","
-        time_series += "population=" + string_util.default_zero(state_population) + ","
+        time_series += "population=" + str(state_populations.get_state_population(state_name)) + ","
         time_series += "last_update=\"" + state_data[sortable_date]["last_update"] + "\","
         time_series += "lat=" + string_util.default_zero(state_data[sortable_date]["lat"]) + ","
         time_series += "long=" + string_util.default_zero(state_data[sortable_date]["long"]) + ","
