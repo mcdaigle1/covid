@@ -2,35 +2,22 @@
 
 import csv
 import glob
-import requests
-#from datetime import datetime
-from math_util import math_util
+#import requests
 from date_util import date_util
 from file_util import file_util
 from string_util import string_util
+from state_data import StateData
 from state_population import StatePopulation
+from state_trend_util import state_trend_util
 
 data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
-# pop_csv_path = "/home/mdaigle/covid/data/state_population.csv"
-API_ENDPOINT = "http://localhost:8086/write?db=covid"
+#API_ENDPOINT = "http://localhost:8086/write?db=covid"
 
+state_data = StateData()
 all_state_data = {}
 state_populations = StatePopulation()
 
-input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/*.csv")]   
-
-# create state population dict from file
-# first_row = True
-# with open(pop_csv_path) as csv_file:
-#     csv_reader = csv.reader(csv_file, delimiter=',')
-#     for row in csv_reader:
-#         if first_row:
-#             first_row = False
-#         else:
-#             state = row[1]
-#             population = row[2]
-#             state_populations[state] = population
-
+input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/*.csv")]
 
 # populate state data from files
 for input_file in input_files:
@@ -43,7 +30,7 @@ for input_file in input_files:
                 first_line = False
             else:
                 if row[1] == "US" and row[2] != "" and row[0] != "Recovered":
-                    state_row = {};
+                    state_row = {}
                     state_row["state"] = row[0]
                     state_row["country"] = row[1]
                     state_row["last_update"] = row[2]
@@ -70,57 +57,46 @@ for input_file in input_files:
                         all_state_data[state_name][sortable_date] = state_row
                     else:
                         all_state_data[state_name] = {sortable_date: state_row}
-                
 
 for state_name in all_state_data:
-#     if state_name in state_populations:
-#         state_population = state_populations[state_name]
-#     else:
-#         state_population = 0
-
-    # print("processing state " + state_name)
-    state_data = all_state_data[state_name]
-    for sortable_date in sorted(state_data.keys()):
-        time_series = ""
-        time_series += "state_data,"
-
-        time_series += "name=" + string_util.canonical(state_name) + ","
-        time_series += "country=" + state_data[sortable_date]["country"] + " "
-
-        time_series += "state=\"" + state_name + "\","
-        time_series += "population=" + str(state_populations.get_state_population(state_name)) + ","
-        time_series += "last_update=\"" + state_data[sortable_date]["last_update"] + "\","
-        time_series += "lat=" + string_util.default_zero(state_data[sortable_date]["lat"]) + ","
-        time_series += "long=" + string_util.default_zero(state_data[sortable_date]["long"]) + ","
-        time_series += "confirmed=" + string_util.default_zero(state_data[sortable_date]["confirmed"]) + ","
-        time_series += "cum_deaths=" + string_util.default_zero(state_data[sortable_date]["cum_deaths"]) + ","
-        time_series += "recovered=" + string_util.default_zero(state_data[sortable_date]["recovered"]) + ","
-        time_series += "active=" + string_util.default_zero(state_data[sortable_date]["active"]) + ","
-        time_series += "fips=" + state_data[sortable_date]["fips"] + ","
-        time_series += "incident_rate=" + string_util.default_zero(state_data[sortable_date]["incident_rate"]) + ","
-        time_series += "people_tested=" + string_util.default_zero(state_data[sortable_date]["people_tested"]) + ","
-        time_series += "people_hospitalized=" + string_util.default_zero(state_data[sortable_date]["people_hospitalized"]) + ","
-        time_series += "mortality_rate=" + string_util.default_zero(state_data[sortable_date]["mortality_rate"]) + ","
-        time_series += "uid=" + state_data[sortable_date]["uid"] + ","
-        time_series += "iso3=\"" + state_data[sortable_date]["iso3"] + "\","
-        time_series += "testing_rate=" + string_util.default_zero(state_data[sortable_date]["testing_rate"]) + ","
-        time_series += "hopitalization_rate=" + string_util.default_zero(state_data[sortable_date]["hopitalization_rate"]) + " "
-
-        time_series += state_data[sortable_date]["epoch_date"] 
-
-        print("writing to influx: " + time_series)
-        r = requests.post(url = API_ENDPOINT, data = time_series)
-        print(r)
+    state_data.add_state_data(all_state_data[state_name])
+#    state_data = all_state_data[state_name]
+#     for sortable_date in sorted(state_data.keys()):
+#         time_series = ""
+#         time_series += "state_data,"
+#
+#         time_series += "name=" + string_util.canonical(state_name) + ","
+#         time_series += "country=" + state_data[sortable_date]["country"] + " "
+#
+#         time_series += "state=\"" + state_name + "\","
+#         time_series += "population=" + str(state_populations.get_state_population(state_name)) + ","
+#         time_series += "last_update=\"" + state_data[sortable_date]["last_update"] + "\","
+#         time_series += "lat=" + string_util.default_zero(state_data[sortable_date]["lat"]) + ","
+#         time_series += "long=" + string_util.default_zero(state_data[sortable_date]["long"]) + ","
+#         time_series += "confirmed=" + string_util.default_zero(state_data[sortable_date]["confirmed"]) + ","
+#         time_series += "cum_deaths=" + string_util.default_zero(state_data[sortable_date]["cum_deaths"]) + ","
+#         time_series += "recovered=" + string_util.default_zero(state_data[sortable_date]["recovered"]) + ","
+#         time_series += "active=" + string_util.default_zero(state_data[sortable_date]["active"]) + ","
+#         time_series += "fips=" + state_data[sortable_date]["fips"] + ","
+#         time_series += "incident_rate=" + string_util.default_zero(state_data[sortable_date]["incident_rate"]) + ","
+#         time_series += "people_tested=" + string_util.default_zero(state_data[sortable_date]["people_tested"]) + ","
+#         time_series += "people_hospitalized=" + string_util.default_zero(state_data[sortable_date]["people_hospitalized"]) + ","
+#         time_series += "mortality_rate=" + string_util.default_zero(state_data[sortable_date]["mortality_rate"]) + ","
+#         time_series += "uid=" + state_data[sortable_date]["uid"] + ","
+#         time_series += "iso3=\"" + state_data[sortable_date]["iso3"] + "\","
+#         time_series += "testing_rate=" + string_util.default_zero(state_data[sortable_date]["testing_rate"]) + ","
+#         time_series += "hopitalization_rate=" + string_util.default_zero(state_data[sortable_date]["hopitalization_rate"]) + " "
+#
+#         time_series += state_data[sortable_date]["epoch_date"]
+#
+#         print("writing to influx: " + time_series)
+#         r = requests.post(url = API_ENDPOINT, data = time_series)
+#         print(r)
             
 
 # rates are cumulative, so calculate daily death rates base on delta from previous day's count
 all_state_daily_deaths = {}
 for state_name in all_state_data:
-#    if state_name in state_populations:
-#        state_population = state_populations[state_name]
-#    else:
-#        state_population = 0
-
     all_state_daily_deaths[state_name] = {}
     first_row = True
     state_data = all_state_data[state_name]
@@ -153,15 +129,16 @@ for state_name in all_state_daily_deaths:
 
 for state_name in all_state_daily_deaths:
     state_data = all_state_daily_deaths[state_name]
-    mean_deaths = math_util.mean_from_state_list(state_data, "value")
-    mean_epoch = math_util.mean_from_state_list(state_data, "epoch_date")
-    slope = math_util.slope_from_state_list(state_data, "epoch_date", "value", mean_epoch, mean_deaths)
-    y_intercept = math_util.get_y_intercept(mean_epoch, mean_deaths, slope)
+    trend_util = StateTrendUtil(state_data)
+#     mean_deaths = math_util.mean_from_state_list(state_data, "value")
+#     mean_epoch = math_util.mean_from_state_list(state_data, "epoch_date")
+#     slope = math_util.slope_from_state_list(state_data, "epoch_date", "value", mean_epoch, mean_deaths)
+#     y_intercept = math_util.get_y_intercept(mean_epoch, mean_deaths, slope)
 
     min_sortable_date = min(state_data.keys())
-    min_y = math_util.get_y_for_x(state_data[min_sortable_date]["epoch_date"], slope, y_intercept)
+    min_y = math_util.get_y_for_x(state_data[min_sortable_date]["epoch_date"])
     max_sortable_date = max(state_data.keys())
-    max_y = math_util.get_y_for_x(state_data[max_sortable_date]["epoch_date"], slope, y_intercept)
+    max_y = math_util.get_y_for_x(state_data[max_sortable_date]["epoch_date"])
 
     time_series = ""
     time_series += "trend_daily_deaths,"
