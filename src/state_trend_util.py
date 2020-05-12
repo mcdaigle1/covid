@@ -13,19 +13,19 @@ class StateTrendUtil:
         self.mean_deaths = self.mean_from_state_list(state_data, "value")
         self.mean_epoch = self.mean_from_state_list(state_data, "epoch_date")
         self.slope = self.slope_from_state_list(state_data, "epoch_date", "value", self.mean_epoch, self.mean_deaths)
-        y_intercept = self.get_y_intercept(self.mean_epoch, self.mean_deaths, self.slope)
+        self.y_intercept = self.get_y_intercept(self.mean_epoch, self.mean_deaths, self.slope)
 
     def get_slope(self):
         return self.slope
 
     def get_mean_deaths(self):
-        return mean_deaths
+        return self.mean_deaths
 
     def get_mean_epoch(self):
-        return mean_epoch
+        return self.mean_epoch
 
     def get_y_intercept(self):
-        return y_intercept
+        return self.y_intercept
 
     def mean_from_state_list(self, state_list, key):
         list_len = len(state_list)
