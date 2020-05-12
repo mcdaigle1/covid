@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-from math_util include math_util
+from math_util import math_util
 
-mean_deaths = 0
-mean_epoch = 0
-slope = 0
-y_intercept = 0
 
 class StateTrendUtil:
+
+    mean_deaths = 0
+    mean_epoch = 0
+    slope = 0
+    y_intercept = 0
 
     def __init__(self, state_data):
         self.mean_deaths = self.mean_from_state_list(state_data, "value")
@@ -52,4 +53,4 @@ class StateTrendUtil:
         return y_mean - (slope * x_mean)
 
     def get_y_for_x(self, x):
-        return (float(this.slope) * float(x)) + float(this.y_intercept)
+        return (float(self.slope) * float(x)) + float(self.y_intercept)

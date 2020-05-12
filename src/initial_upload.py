@@ -2,16 +2,17 @@
 
 import csv
 import glob
-#import requests
+import requests
 from date_util import date_util
 from file_util import file_util
 from string_util import string_util
+from math_util import math_util
 from state_data import StateData
 from state_population import StatePopulation
-from state_trend_util import state_trend_util
+from state_trend_util import StateTrendUtil
 
 data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
-#API_ENDPOINT = "http://localhost:8086/write?db=covid"
+API_ENDPOINT = "http://localhost:8086/write?db=covid"
 
 state_data = StateData()
 all_state_data = {}
@@ -49,6 +50,7 @@ for input_file in input_files:
                     state_row["iso3"] = row[15]
                     state_row["testing_rate"] = row[16]
                     state_row["hopitalization_rate"] = row[17]
+                    state_row["population"] = state_populations.get_state_population(row[0])
                
                     state_row["epoch_date"] = date_util.date_to_epoch(sortable_date)
 
@@ -136,9 +138,9 @@ for state_name in all_state_daily_deaths:
 #     y_intercept = math_util.get_y_intercept(mean_epoch, mean_deaths, slope)
 
     min_sortable_date = min(state_data.keys())
-    min_y = math_util.get_y_for_x(state_data[min_sortable_date]["epoch_date"])
+    min_y = trend_util.get_y_for_x(state_data[min_sortable_date]["epoch_date"])
     max_sortable_date = max(state_data.keys())
-    max_y = math_util.get_y_for_x(state_data[max_sortable_date]["epoch_date"])
+    max_y = trend_util.get_y_for_x(state_data[max_sortable_date]["epoch_date"])
 
     time_series = ""
     time_series += "trend_daily_deaths,"
