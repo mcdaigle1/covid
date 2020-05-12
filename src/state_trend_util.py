@@ -2,7 +2,6 @@
 
 from math_util import math_util
 
-
 class StateTrendUtil:
 
     mean_deaths = 0

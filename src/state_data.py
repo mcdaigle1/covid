@@ -4,7 +4,7 @@ import requests
 from string_util import string_util
 from influx_api import InfluxApi
 
-API_ENDPOINT = "http://localhost:8086/write?db=covid"
+#API_ENDPOINT = "http://localhost:8086/write?db=covid"
 
 class StateData(InfluxApi):
 
@@ -37,6 +37,7 @@ class StateData(InfluxApi):
 
             time_series += state_data[sortable_date]["epoch_date"]
 
-            print("writing to influx: " + time_series)
-            r = requests.post(url = API_ENDPOINT, data = time_series)
-            print(r)
+            super().write(time_series)
+            #print("writing to influx: " + time_series)
+            #r = requests.post(url = API_ENDPOINT, data = time_series)
+            #print(r)
