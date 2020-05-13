@@ -1,67 +1,10 @@
 #!/usr/bin/env python3
 
-import csv
-import glob
-import requests
-from date_util import date_util
-from file_util import file_util
-from string_util import string_util
-from math_util import math_util
 from state_data import StateData
-from state_population import StatePopulation
-from state_trend_util import StateTrendUtil
-
-data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
-API_ENDPOINT = "http://localhost:8086/write?db=covid"
 
 state_data = StateData()
-all_state_data = {}
-state_populations = StatePopulation()
-
-input_files = [f for f in glob.glob("/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/*.csv")]
-
-# populate state data from files
-for input_file in input_files:
-    first_line = True
-    sortable_date = file_util.file_to_sortable_date(input_file)
-    with open(input_file) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        for row in csv_reader:
-            if first_line:
-                first_line = False
-            else:
-                if row[1] == "US" and row[2] != "" and row[0] != "Recovered":
-                    state_row = {}
-                    state_row["state"] = row[0]
-                    state_row["country"] = row[1]
-                    state_row["last_update"] = row[2]
-                    state_row["lat"] = row[3]
-                    state_row["long"] = row[4]
-                    state_row["confirmed"] = row[5]
-                    state_row["cum_deaths"] = row[6]
-                    state_row["recovered"] = row[7]
-                    state_row["active"] = row[8]
-                    state_row["fips"] = row[9]
-                    state_row["incident_rate"] = row[10]
-                    state_row["people_tested"] = row[11]
-                    state_row["people_hospitalized"] = row[12]
-                    state_row["mortality_rate"] = row[13]
-                    state_row["uid"] = row[14]
-                    state_row["iso3"] = row[15]
-                    state_row["testing_rate"] = row[16]
-                    state_row["hopitalization_rate"] = row[17]
-                    state_row["population"] = state_populations.get_state_population(row[0])
-               
-                    state_row["epoch_date"] = date_util.date_to_epoch(sortable_date)
-
-                    state_name = row[0]
-                    if state_name in all_state_data:
-                        all_state_data[state_name][sortable_date] = state_row
-                    else:
-                        all_state_data[state_name] = {sortable_date: state_row}
-
-for state_name in all_state_data:
-    state_data.add_state_data(all_state_data[state_name])
+state_data.clear_state_data_from_influxdb()
+state_data.add_all_state_data_to_influxdb
     
 # rates are cumulative, so calculate daily death rates base on delta from previous day's count
 all_state_daily_deaths = {}

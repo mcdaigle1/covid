@@ -1,14 +1,69 @@
 #!/usr/bin/env python3
 
-import requests
 from string_util import string_util
 from influx_api import InfluxApi
+from state_population import StatePopulation
 
-#API_ENDPOINT = "http://localhost:8086/write?db=covid"
+class StateData():
 
-class StateData(InfluxApi):
+    data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 
-    def add_state_data(this, state_data):
+    influx_api = InfluxApi()
+    state_populations = StatePopulation()
+
+    all_state_data = {}
+    input_files = None
+
+    def __init__(self):
+        self.input_files = [f for f in glob.glob(self.data_dir + "*.csv")]
+
+        for input_file in self.input_files:
+            first_line = True
+            sortable_date = file_util.file_to_sortable_date(input_file)
+            with open(input_file) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                for row in csv_reader:
+                    if first_line:
+                        first_line = False
+                    else:
+                        if row[1] == "US" and row[2] != "" and row[0] != "Recovered":
+                            state_row = {}
+                            state_row["state"] = row[0]
+                            state_row["country"] = row[1]
+                            state_row["last_update"] = row[2]
+                            state_row["lat"] = row[3]
+                            state_row["long"] = row[4]
+                            state_row["confirmed"] = row[5]
+                            state_row["cum_deaths"] = row[6]
+                            state_row["recovered"] = row[7]
+                            state_row["active"] = row[8]
+                            state_row["fips"] = row[9]
+                            state_row["incident_rate"] = row[10]
+                            state_row["people_tested"] = row[11]
+                            state_row["people_hospitalized"] = row[12]
+                            state_row["mortality_rate"] = row[13]
+                            state_row["uid"] = row[14]
+                            state_row["iso3"] = row[15]
+                            state_row["testing_rate"] = row[16]
+                            state_row["hopitalization_rate"] = row[17]
+                            state_row["population"] = state_populations.get_state_population(row[0])
+
+                            state_row["epoch_date"] = date_util.date_to_epoch(sortable_date)
+
+                            state_name = row[0]
+                            if state_name in self.all_state_data:
+                                self.all_state_data[state_name][sortable_date] = state_row
+                            else:
+                                self.all_state_data[state_name] = {sortable_date: state_row}
+
+    def clear_state_data_from_influxdb(self):
+        influx_api.delete_measurement("state_data")
+
+    def add_all_state_data_to_influxdb(self):
+        for state_name in self.all_state_data:
+            self.add_single_state_data_to_influxdb(self.all_state_data[state_name])
+
+    def add_single_state_data_to_influxdb(self, state_data):
         for sortable_date in sorted(state_data.keys()):
             time_series = ""
             time_series += "state_data,"
@@ -37,7 +92,4 @@ class StateData(InfluxApi):
 
             time_series += state_data[sortable_date]["epoch_date"]
 
-            super().write(time_series)
-            #print("writing to influx: " + time_series)
-            #r = requests.post(url = API_ENDPOINT, data = time_series)
-            #print(r)
+            influx_api.write(time_series)
