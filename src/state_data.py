@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
+import glob
+import csv
 from string_util import string_util
+from file_util import file_util
+from date_util import date_util
 from influx_api import InfluxApi
 from state_population import StatePopulation
 
@@ -8,14 +12,15 @@ class StateData():
 
     data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 
-    influx_api = InfluxApi()
-    state_populations = StatePopulation()
-
     all_state_data = {}
+    influx_api = None
     input_files = None
+    state_populations = None
 
     def __init__(self):
+        self.state_populations = StatePopulation()
         self.input_files = [f for f in glob.glob(self.data_dir + "*.csv")]
+        self.influx_api = InfluxApi()
 
         for input_file in self.input_files:
             first_line = True
@@ -46,7 +51,7 @@ class StateData():
                             state_row["iso3"] = row[15]
                             state_row["testing_rate"] = row[16]
                             state_row["hopitalization_rate"] = row[17]
-                            state_row["population"] = state_populations.get_state_population(row[0])
+                            state_row["population"] = self.state_populations.get_state_population(row[0])
 
                             state_row["epoch_date"] = date_util.date_to_epoch(sortable_date)
 
@@ -57,10 +62,12 @@ class StateData():
                                 self.all_state_data[state_name] = {sortable_date: state_row}
 
     def clear_state_data_from_influxdb(self):
-        influx_api.delete_measurement("state_data")
+        self.influx_api.delete_measurement("state_data")
 
     def add_all_state_data_to_influxdb(self):
+        print("in add_all_state_data_to_influxdb")
         for state_name in self.all_state_data:
+            print(state_name)
             self.add_single_state_data_to_influxdb(self.all_state_data[state_name])
 
     def add_single_state_data_to_influxdb(self, state_data):
@@ -92,4 +99,4 @@ class StateData():
 
             time_series += state_data[sortable_date]["epoch_date"]
 
-            influx_api.write(time_series)
+            self.influx_api.write(time_series)
