@@ -8,7 +8,7 @@ from date_util import date_util
 from influx_api import InfluxApi
 from state_population import StatePopulation
 
-class StateData():
+class StateDataUtil():
 
     data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 
@@ -60,6 +60,9 @@ class StateData():
                                 self.all_state_data[state_name][sortable_date] = state_row
                             else:
                                 self.all_state_data[state_name] = {sortable_date: state_row}
+
+    def get_all_state_data():
+        return self.all_state_data
 
     def clear_state_data_from_influxdb(self):
         self.influx_api.delete_measurement("state_data")
