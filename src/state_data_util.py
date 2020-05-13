@@ -61,7 +61,7 @@ class StateDataUtil():
                             else:
                                 self.all_state_data[state_name] = {sortable_date: state_row}
 
-    def get_all_state_data():
+    def get_all_state_data(self):
         return self.all_state_data
 
     def clear_state_data_from_influxdb(self):

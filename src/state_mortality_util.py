@@ -16,7 +16,7 @@ class StateMortalityUtil():
         self.state_data_util = StateDataUtil()
         self.influx_api = InfluxApi()
 
-        all_state_data = state_data_util.get_all_state_data()
+        all_state_data = self.state_data_util.get_all_state_data()
         for state_name in all_state_data:
             self.all_state_daily_deaths[state_name] = {}
             first_row = True
@@ -30,7 +30,7 @@ class StateMortalityUtil():
                     daily_deaths = cum_deaths - cum_deaths_yesterday
                     self.all_state_daily_deaths[state_name][sortable_date] = {}
                     self.all_state_daily_deaths[state_name][sortable_date]["value"] = daily_deaths
-                    self.all_state_daily_deaths[state_name][sortable_date]["population"] = str(state_populations.get_state_population(state_name))
+                    self.all_state_daily_deaths[state_name][sortable_date]["population"] = str(self.state_populations.get_state_population(state_name))
                     self.all_state_daily_deaths[state_name][sortable_date]["epoch_date"] = state_data[sortable_date]["epoch_date"]
                     self.cum_deaths_yesterday = cum_deaths
 
