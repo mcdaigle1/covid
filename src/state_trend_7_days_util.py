@@ -59,7 +59,7 @@ class StateTrend7DaysUtil:
             self.influx_api.write(time_series)
 
             time_series = ""
-            time_series += "trend_daily_deaths_7_day,"
+            time_series += "trend_daily_deaths_seven_day,"
             time_series += "name=" + string_util.canonical(state_name) + " "
             time_series += "value=" + str(state_trends["y_max"]) + " "
             time_series += state_trends["max_epoch"]
