@@ -1,43 +1,69 @@
 #!/usr/bin/env python3
 
 from math_util import math_util
+from state_data_util import StateDataUtil
+from influx_api import InfluxApi
 
 class StateTrendUtil:
 
-    mean_deaths = 0
-    mean_epoch = 0
-    slope = 0
-    y_intercept = 0
-    x_min = 0
-    y_min = 0
+    state_data_util = None
+    influx_api = None
+    all_state_trends = {}
 
     def __init__(self, state_data):
-        self.mean_deaths = self.mean_from_state_list(state_data, "value")
-        self.mean_epoch = self.mean_from_state_list(state_data, "epoch_date")
-        self.slope = self.slope_from_state_list(state_data, "epoch_date", "value", self.mean_epoch, self.mean_deaths)
-        self.y_intercept = self.get_y_intercept(self.mean_epoch, self.mean_deaths, self.slope)
-        min_sortable_date = min(state_data.keys())
-        self.x_min = trend_util.get_y_for_x(state_data[min_sortable_date]["epoch_date"])
-        max_sortable_date = max(state_data.keys())
-        self.y_min = trend_util.get_y_for_x(state_data[max_sortable_date]["epoch_date"])
+        self.state_data_util = StateDataUtil()
+        self.influx_api = InfluxApi()
 
-    def get_slope(self):
-        return self.slope
+        all_state_data = self.state_data_util.get_all_state_data()
+        for state_name in all_state_data:
+            self.all_state_daily_deaths[state_name] = {}
+            first_row = True
+            state_data = all_state_data[state_name]
 
-    def get_mean_deaths(self):
-        return self.mean_deaths
+            mean_deaths = self.mean_from_state_list(state_data, "value")
+            mean_epoch = self.mean_from_state_list(state_data, "epoch_date")
+            slope = self.slope_from_state_list(state_data, "epoch_date", "value", mean_epoch, mean_deaths)
+            y_intercept = self.get_y_intercept(mean_epoch, mean_deaths, slope)
+            min_sortable_date = min(state_data.keys())
+            max_sortable_date = max(state_data.keys())
+            min_epoch = state_data[min_sortable_date]["epoch_date"]
+            y_min = trend_util.get_y_for_x(min_epoch)
+            max_epoch = state_data[max_sortable_date]["epoch_date"]
+            y_max = trend_util.get_y_for_x(max_epoch)
 
-    def get_mean_epoch(self):
-        return self.mean_epoch
+            self.all_state_trends[state_name]["mean_deaths"] = mean_deaths
+            self.all_state_trends[state_name]["mean_epoch"] = mean_epoch
+            self.all_state_trends[state_name]["slope"] = slope
+            self.all_state_trends[state_name]["y_intercept"] = y_intercept
+            self.all_state_trends[state_name]["min_sortable_date"] = min_sortable_date
+            self.all_state_trends[state_name]["min_epoch"] = min_epoch
+            self.all_state_trends[state_name]["y_min"] = y_min
+            self.all_state_trends[state_name]["max_sortable_date"] = max_sortable_date
+            self.all_state_trends[state_name]["max_epoch"] = max_epoch
+            self.all_state_trends[state_name]["y_max"] = y_max
 
-    def get_y_intercept(self):
-        return self.y_intercept
+    def clear_state_trends_from_influxdb(self):
+        self.influx_api.delete_measurement("trend_daily_deaths")
 
-    def get_x_min(self):
-        return self.x_min
+    def add_state_trends_to_influxdb(self):
+        for state_name in self.all_state_trends:
+            state_trends = self.all_state_trends[state_name]
 
-    def get_y_min(self):
-        return self.y_min
+            time_series = ""
+            time_series += "trend_daily_deaths,"
+            time_series += "name=" + string_util.canonical(state_name) + " "
+            time_series += "value=" + str(all_state_trends["y_min"]) + " "
+            time_series += state_trends["min_epoch"]
+
+            self.influx_api.write(time_series)
+
+            time_series = ""
+            time_series += "trend_daily_deaths,"
+            time_series += "name=" + string_util.canonical(state_name) + " "
+            time_series += "value=" + str(all_state_trends["y_max"]) + " "
+            time_series += state_trends["max_epoch"]
+
+            self.influx_api.write(time_series)
 
     def mean_from_state_list(self, state_list, key):
         list_len = len(state_list)

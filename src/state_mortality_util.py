@@ -10,6 +10,7 @@ class StateMortalityUtil():
     all_state_daily_deaths = {}
     influx_api = None
     state_populations = None
+    state_data_util = None
 
     def __init__(self):
         self.state_populations = StatePopulation()
