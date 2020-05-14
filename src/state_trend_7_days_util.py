@@ -95,5 +95,7 @@ class StateTrend7DaysUtil:
 
     def get_last_seven(self, state_daily_deaths):
         sorted_keys = sorted(state_daily_deaths.keys())
-        return sorted_keys[-7:]
-
+        seven_states = {}
+        for key in  sorted_keys[-7:]:
+            seven_states[key] = state_daily_deaths[key]
+        return seven_states
