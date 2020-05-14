@@ -18,41 +18,40 @@ class StateTrend7DaysUtil:
         all_state_daily_deaths = self.state_mortality_util.get_all_state_daily_deaths()
         for state_name in all_state_daily_deaths:
             state_data = all_state_daily_deaths[state_name]
-            self.get_last_seven()
-#             self.all_state_trends[state_name] = {}
-#             first_row = True
-#
-#             mean_deaths = self.mean_from_state_list(state_data, "value")
-#             mean_epoch = self.mean_from_state_list(state_data, "epoch_date")
-#             slope = self.slope_from_state_list(state_data, "epoch_date", "value", mean_epoch, mean_deaths)
-#             y_intercept = self.get_y_intercept(mean_epoch, mean_deaths, slope)
-#             min_sortable_date = min(state_data.keys())
-#             max_sortable_date = max(state_data.keys())
-#             min_epoch = state_data[min_sortable_date]["epoch_date"]
-#             y_min = self.get_y_for_x(min_epoch, slope, y_intercept)
-#             max_epoch = state_data[max_sortable_date]["epoch_date"]
-#             y_max = self.get_y_for_x(max_epoch, slope, y_intercept)
-#
-#             self.all_state_trends[state_name]["mean_deaths"] = mean_deaths
-#             self.all_state_trends[state_name]["mean_epoch"] = mean_epoch
-#             self.all_state_trends[state_name]["slope"] = slope
-#             self.all_state_trends[state_name]["y_intercept"] = y_intercept
-#             self.all_state_trends[state_name]["min_sortable_date"] = min_sortable_date
-#             self.all_state_trends[state_name]["min_epoch"] = min_epoch
-#             self.all_state_trends[state_name]["y_min"] = y_min
-#             self.all_state_trends[state_name]["max_sortable_date"] = max_sortable_date
-#             self.all_state_trends[state_name]["max_epoch"] = max_epoch
-#             self.all_state_trends[state_name]["y_max"] = y_max
+            last_7_state_data = self.get_last_seven(state_data)
+            self.all_state_trends[state_name] = {}
+
+            mean_deaths = self.mean_from_state_list(last_7_state_data, "value")
+            mean_epoch = self.mean_from_state_list(last_7_state_data, "epoch_date")
+            slope = self.slope_from_state_list(last_7_state_data, "epoch_date", "value", mean_epoch, mean_deaths)
+            y_intercept = self.get_y_intercept(mean_epoch, mean_deaths, slope)
+            min_sortable_date = min(last_7_state_data.keys())
+            max_sortable_date = max(last_7_state_data.keys())
+            min_epoch = last_7_state_data[min_sortable_date]["epoch_date"]
+            y_min = self.get_y_for_x(min_epoch, slope, y_intercept)
+            max_epoch = last_7_state_data[max_sortable_date]["epoch_date"]
+            y_max = self.get_y_for_x(max_epoch, slope, y_intercept)
+
+            self.all_state_trends[state_name]["mean_deaths"] = mean_deaths
+            self.all_state_trends[state_name]["mean_epoch"] = mean_epoch
+            self.all_state_trends[state_name]["slope"] = slope
+            self.all_state_trends[state_name]["y_intercept"] = y_intercept
+            self.all_state_trends[state_name]["min_sortable_date"] = min_sortable_date
+            self.all_state_trends[state_name]["min_epoch"] = min_epoch
+            self.all_state_trends[state_name]["y_min"] = y_min
+            self.all_state_trends[state_name]["max_sortable_date"] = max_sortable_date
+            self.all_state_trends[state_name]["max_epoch"] = max_epoch
+            self.all_state_trends[state_name]["y_max"] = y_max
 
     def clear_state_trends_from_influxdb(self):
-        self.influx_api.delete_measurement("trend_daily_deaths")
+        self.influx_api.delete_measurement("trend_daily_deaths_seven_day")
 
     def add_state_trends_to_influxdb(self):
         for state_name in self.all_state_trends:
             state_trends = self.all_state_trends[state_name]
 
             time_series = ""
-            time_series += "trend_daily_deaths,"
+            time_series += "trend_daily_deaths_seven_day,"
             time_series += "name=" + string_util.canonical(state_name) + " "
             time_series += "value=" + str(state_trends["y_min"]) + " "
             time_series += state_trends["min_epoch"]
@@ -60,7 +59,7 @@ class StateTrend7DaysUtil:
             self.influx_api.write(time_series)
 
             time_series = ""
-            time_series += "trend_daily_deaths,"
+            time_series += "trend_daily_deaths_7_day,"
             time_series += "name=" + string_util.canonical(state_name) + " "
             time_series += "value=" + str(state_trends["y_max"]) + " "
             time_series += state_trends["max_epoch"]
@@ -96,7 +95,5 @@ class StateTrend7DaysUtil:
 
     def get_last_seven(self, state_daily_deaths):
         sorted_keys = sorted(state_daily_deaths.keys())
-        last_seven_daily_deaths = sorted_keys[-7:]
-        for sorted_key in sorted_keys:
-            print("Sorted Key: " + sorted_keys)
+        return sorted_keys[-7:]
 
