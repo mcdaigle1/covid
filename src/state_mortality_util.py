@@ -32,7 +32,7 @@ class StateMortalityUtil():
                     self.all_state_daily_deaths[state_name][sortable_date]["value"] = daily_deaths
                     self.all_state_daily_deaths[state_name][sortable_date]["population"] = str(self.state_populations.get_state_population(state_name))
                     self.all_state_daily_deaths[state_name][sortable_date]["epoch_date"] = state_data[sortable_date]["epoch_date"]
-                    self.cum_deaths_yesterday = cum_deaths
+                    cum_deaths_yesterday = cum_deaths
 
     def clear_state_daily_deaths_from_influxdb(self):
         self.influx_api.delete_measurement("daily_deaths")
