@@ -35,6 +35,9 @@ class StateMortalityUtil():
                     self.all_state_daily_deaths[state_name][sortable_date]["epoch_date"] = state_data[sortable_date]["epoch_date"]
                     cum_deaths_yesterday = cum_deaths
 
+    def get_all_state_daily_deaths(self):
+        return self.all_state_daily_deaths
+
     def clear_state_daily_deaths_from_influxdb(self):
         self.influx_api.delete_measurement("daily_deaths")
 

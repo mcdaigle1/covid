@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 
 from math_util import math_util
-from state_data_util import StateDataUtil
+from state_mortality_util import StateMortalityUtil
 from influx_api import InfluxApi
 
 class StateTrendUtil:
 
-    state_data_util = None
+    state_mortality_util = None
     influx_api = None
     all_state_trends = {}
 
-    def __init__(self, state_data):
-        self.state_data_util = StateDataUtil()
+    def __init__(self):
+        self.state_mortality_util = StateMortalityUtil()
         self.influx_api = InfluxApi()
 
-        all_state_data = self.state_data_util.get_all_state_data()
-        for state_name in all_state_data:
-            self.all_state_daily_deaths[state_name] = {}
+        all_state_daily_deaths = self.state_mortality_util.get_all_state_daily_deaths()
+        for state_name in all_state_daily_deaths:
+            state_data = all_state_daily_deaths[state_name]
+            self.all_state_trends[state_name] = {}
             first_row = True
-            state_data = all_state_data[state_name]
 
             mean_deaths = self.mean_from_state_list(state_data, "value")
             mean_epoch = self.mean_from_state_list(state_data, "epoch_date")
