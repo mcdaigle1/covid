@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from math_util import math_util
+from string_util import string_util
 from state_mortality_util import StateMortalityUtil
 from influx_api import InfluxApi
 
@@ -27,9 +28,9 @@ class StateTrendUtil:
             min_sortable_date = min(state_data.keys())
             max_sortable_date = max(state_data.keys())
             min_epoch = state_data[min_sortable_date]["epoch_date"]
-            y_min = trend_util.get_y_for_x(min_epoch)
+            y_min = self.get_y_for_x(min_epoch, slope, y_intercept)
             max_epoch = state_data[max_sortable_date]["epoch_date"]
-            y_max = trend_util.get_y_for_x(max_epoch)
+            y_max = self.get_y_for_x(max_epoch, slope, y_intercept)
 
             self.all_state_trends[state_name]["mean_deaths"] = mean_deaths
             self.all_state_trends[state_name]["mean_epoch"] = mean_epoch
@@ -52,7 +53,7 @@ class StateTrendUtil:
             time_series = ""
             time_series += "trend_daily_deaths,"
             time_series += "name=" + string_util.canonical(state_name) + " "
-            time_series += "value=" + str(all_state_trends["y_min"]) + " "
+            time_series += "value=" + str(state_trends["y_min"]) + " "
             time_series += state_trends["min_epoch"]
 
             self.influx_api.write(time_series)
@@ -60,7 +61,7 @@ class StateTrendUtil:
             time_series = ""
             time_series += "trend_daily_deaths,"
             time_series += "name=" + string_util.canonical(state_name) + " "
-            time_series += "value=" + str(all_state_trends["y_max"]) + " "
+            time_series += "value=" + str(state_trends["y_max"]) + " "
             time_series += state_trends["max_epoch"]
 
             self.influx_api.write(time_series)
@@ -89,5 +90,5 @@ class StateTrendUtil:
     def get_y_intercept(self, x_mean, y_mean, slope):
         return y_mean - (slope * x_mean)
 
-    def get_y_for_x(self, x):
-        return (float(self.slope) * float(x)) + float(self.y_intercept)
+    def get_y_for_x(self, x, slope, y_intercept):
+        return (float(slope) * float(x)) + float(y_intercept)
