@@ -28,7 +28,7 @@ class StateRankDpmUtil:
             if int(population) > 0:
                 self.all_state_ranks_dpm[state_name] = int(death_total) / int(population) * 1000000
                 print("state: " + state_name + ", deaths/pop last week: " + str(self.all_state_ranks_dpm[state_name]))
-        sorted_states_by_rank = self.sort_all_states_by_rank(all_state_ranks_dpm)
+        sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
         for state in sorted_states_by_rank:
             print(state)
 
@@ -68,17 +68,17 @@ class StateRankDpmUtil:
     def sort_all_states_by_rank(self, all_state_ranks_dpm):
         sorted_states = []
 
-        for state_name in all_state_ranks_dpm
+        for state_name in all_state_ranks_dpm:
             deaths_per_million = float(all_state_ranks_dpm[state_name])
             inserted = False
-            for x in range(len(sorted_states()):
-                if death_per_million < sorted_states[x] and inserted = False:
+            for x in range(len(sorted_states)):
+                if deaths_per_million < int(sorted_states[x]) and inserted == False:
                     sorted_states.insert(x, state_name)
                     inserted = True
-            if inserted == False
-                sorted_states.insert(len(sorted_states(), state_name)
+            if inserted == False:
+                sorted_states.insert(len(sorted_states), state_name)
 
-         return sorted_states
+        return sorted_states
 
 #         list.insert(i, x)
 #         Insert an item at a given position. The first argument is the index of the element before which to insert,
