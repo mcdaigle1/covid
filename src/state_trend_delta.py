@@ -28,6 +28,7 @@ class StateTrendDelta:
         all_state_trends_7_days = state_trend_7_days_util.get_all_state_trends()
 
         for state_name in all_state_trends:
+            print("state: " + state_name)
             state_trends = all_state_trends[state_name]
             state_trends_7_days = all_state_trends_7_days[state_name]
             state_daily_deaths = all_state_daily_deaths[state_name]
@@ -88,6 +89,12 @@ class StateTrendDelta:
     # full dataset trend.  This is a combination of the average height of the seven day trend relative to
     # the full trend at the same time, compared to the slope differences
     def calculate_normalized_delta(slope_total, slope_7_day, minus_four_y, minus_four_y_7_day):
-        percent_height_diff = (minus_four_y_7_day - minus_four_y) / minus_four_y
 
+        percent_height_diff = (minus_four_y_7_day - minus_four_y) / minus_four_y
         percent_slope_diff = (slope_7_day - slope_total) / slope_total
+
+        print("total slope: " + str(slope_total) + ", slope 7 day; " + str(slope_7_day))
+        print("percent slope_diff: " + str(percent_slope_diff)
+
+        print("y total: " + minus_four_y + ", 7 day y total: " + minus_four_y_7_day)
+        print("percent height diff: " + str(percent_height_diff)
