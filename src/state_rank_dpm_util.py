@@ -69,14 +69,14 @@ class StateRankDpmUtil:
         sorted_states = []
 
         for state_name in all_state_ranks_dpm:
-            deaths_per_million = float(all_state_ranks_dpm[state_name])
+            state_record = {"state_name" : state_name, "dpm" : float(all_state_ranks_dpm[state_name])}
             inserted = False
             for x in range(len(sorted_states)):
-                if deaths_per_million < int(sorted_states[x]) and inserted == False:
-                    sorted_states.insert(x, state_name)
+                if state_record["dpm"] < sorted_states[x]["dpm"] and inserted == False:
+                    sorted_states.insert(x, state_record)
                     inserted = True
             if inserted == False:
-                sorted_states.insert(len(sorted_states), state_name)
+                sorted_states.insert(len(sorted_states), state_record)
 
         return sorted_states
 
