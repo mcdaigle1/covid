@@ -25,9 +25,9 @@ class StateRankDpmUtil:
                 death_total += last_seven_state_deaths[state_key]["value"]
             population = last_seven_state_deaths[state_key]["population"]
 
-            all_state_ranks_dpm[state_name] = death_total / population
-
-            Print("state: " + state_name + ", deaths/pop last week: " + str(all_state_ranks_dpm[state_name]))
+            if int(population) > 0:
+                self.all_state_ranks_dpm[state_name] = int(death_total) / int(population) * 1000000
+                print("state: " + state_name + ", deaths/pop last week: " + str(self.all_state_ranks_dpm[state_name]))
 
     def get_all_state_ranks_dpm(self):
         return self.all_state_trends
