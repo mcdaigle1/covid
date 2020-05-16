@@ -19,7 +19,6 @@ class StateTrendUtil:
         for state_name in all_state_daily_deaths:
             state_data = all_state_daily_deaths[state_name]
             self.all_state_trends[state_name] = {}
-            first_row = True
 
             mean_deaths = self.mean_from_state_list(state_data, "value")
             mean_epoch = self.mean_from_state_list(state_data, "epoch_date")
@@ -42,6 +41,9 @@ class StateTrendUtil:
             self.all_state_trends[state_name]["max_sortable_date"] = max_sortable_date
             self.all_state_trends[state_name]["max_epoch"] = max_epoch
             self.all_state_trends[state_name]["y_max"] = y_max
+
+    def get_all_state_trends(self):
+        return self.all_state_trends
 
     def clear_state_trends_from_influxdb(self):
         self.influx_api.delete_measurement("trend_daily_deaths")

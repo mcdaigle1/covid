@@ -43,6 +43,9 @@ class StateTrend7DaysUtil:
             self.all_state_trends[state_name]["max_epoch"] = max_epoch
             self.all_state_trends[state_name]["y_max"] = y_max
 
+    def get_all_state_trends(self):
+        return self.all_state_trends
+
     def clear_state_trends_from_influxdb(self):
         self.influx_api.delete_measurement("trend_daily_deaths_seven_day")
 
