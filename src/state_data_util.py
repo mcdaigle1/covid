@@ -53,9 +53,7 @@ class StateDataUtil():
                             state_row["hopitalization_rate"] = row[17]
                             state_row["population"] = self.state_populations.get_state_population(row[0])
 
-                            print("sortable_date: " + str(sortable_date))
                             state_row["epoch_date"] = date_util.date_to_epoch(sortable_date)
-                            print("epoch: " + state_row["epoch_date"])
 
                             state_name = row[0]
                             if state_name in self.all_state_data:
@@ -70,9 +68,7 @@ class StateDataUtil():
         self.influx_api.delete_measurement("state_data")
 
     def add_all_state_data_to_influxdb(self):
-        print("in add_all_state_data_to_influxdb")
         for state_name in self.all_state_data:
-            print(state_name)
             self.add_single_state_data_to_influxdb(self.all_state_data[state_name])
 
     def add_single_state_data_to_influxdb(self, state_data):

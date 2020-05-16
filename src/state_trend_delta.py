@@ -35,14 +35,24 @@ class StateTrendDelta:
 
             # get the fourth from last daily death record.  We use this to compare the height of the
             # full trend line with the seven day trend.
-            daily_deaths_minus_four_key = get_fourth_from_last_key(state_daily_deaths)
+            daily_deaths_minus_four_key = self.get_fourth_from_last_key(state_daily_deaths)
             daily_death_minus_four = state_daily_deaths[daily_deaths_minus_four_key]
             # Get the fourth from last y value for both the full and 7 day trend.  We do this because we want to
             # compare the middle of the 7 day trend with the same day on the full trend
-            trend_full_minus_four_y = state_trend_util.get_y_for_x(daily_death_minus_four["epoch_date"])
-            trend_7_days_minus_four_y = seven_day_state_trend_util_7_days_util.get_y_for_x(daily_death_minus_four["epoch_date"])
+            trend_full_minus_four_y = state_trend_util.get_y_for_x(
+                    daily_death_minus_four["epoch_date"], 
+                    state_trends["slope"], 
+                    state_trends["y_intercept"])
+            trend_7_days_minus_four_y = state_trend_7_days_util.get_y_for_x(
+                    daily_death_minus_four["epoch_date"],
+                    state_trends_7_days["slope"],
+                    state_trends_7_days["y_intercept"])
 
-            normalized_delta = calculate_normalized_delta(slope_total, slope_7_day, minus_four_y, minus_four_y_7_day)
+            normalized_delta = self.calculate_normalized_delta(
+                    state_trends["slope"],
+                    state_trends_7_days["slope"],
+                    trend_full_minus_four_y,
+                    trend_7_days_minus_four_y)
 
             # populate the all_state_deltas structure
             self.all_state_deltas[state_name] = {}
@@ -88,13 +98,20 @@ class StateTrendDelta:
     # calculate a constant delta value that represents the amount of change in the last seven day trend from the
     # full dataset trend.  This is a combination of the average height of the seven day trend relative to
     # the full trend at the same time, compared to the slope differences
-    def calculate_normalized_delta(slope_total, slope_7_day, minus_four_y, minus_four_y_7_day):
+    def calculate_normalized_delta(self, slope_total, slope_7_day, minus_four_y, minus_four_y_7_day):
 
-        percent_height_diff = (minus_four_y_7_day - minus_four_y) / minus_four_y
-        percent_slope_diff = (slope_7_day - slope_total) / slope_total
+        if minus_four_y == 0:
+            percent_height_diff = (minus_four_y_7_day - minus_four_y) / .0001
+        else:
+            percent_height_diff = (minus_four_y_7_day - minus_four_y) / minus_four_y
+            
+        if slope_total == 0:
+            percent_slope_diff = (slope_7_day - slope_total) / .0001
+        else:
+            percent_slope_diff = (slope_7_day - slope_total) / slope_total
 
         print("total slope: " + str(slope_total) + ", slope 7 day; " + str(slope_7_day))
-        print("percent slope_diff: " + str(percent_slope_diff)
+        print("percent slope_diff: " + str(percent_slope_diff))
 
-        print("y total: " + minus_four_y + ", 7 day y total: " + minus_four_y_7_day)
-        print("percent height diff: " + str(percent_height_diff)
+        print("y total: " + str(minus_four_y) + ", 7 day y total: " + str(minus_four_y_7_day))
+        print("percent height diff: " + str(percent_height_diff))
