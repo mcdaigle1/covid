@@ -12,7 +12,7 @@ from influx_api import InfluxApi
 # state are significant.  We'll try to get a normalized delta value from:
 # -- relative height of 7 day trend vs full trend
 # -- differences in slope of 7 day trend vs full trend
-class StateTrendDelta:
+class StateTrendDeltaUtil:
 
     all_state_deltas = {}
 
@@ -52,7 +52,8 @@ class StateTrendDelta:
                     state_trends["slope"],
                     state_trends_7_days["slope"],
                     trend_full_minus_four_y,
-                    trend_7_days_minus_four_y)
+                    trend_7_days_minus_four_y,
+                    daily_death_minus_four[population])
 
             # populate the all_state_deltas structure
             self.all_state_deltas[state_name] = {}
@@ -98,20 +99,17 @@ class StateTrendDelta:
     # calculate a constant delta value that represents the amount of change in the last seven day trend from the
     # full dataset trend.  This is a combination of the average height of the seven day trend relative to
     # the full trend at the same time, compared to the slope differences
-    def calculate_normalized_delta(self, slope_total, slope_7_day, minus_four_y, minus_four_y_7_day):
+    def calculate_normalized_delta(self, slope_total, slope_7_day, minus_four_y, minus_four_y_7_day, population):
 
         if minus_four_y == 0:
             percent_height_diff = (minus_four_y_7_day - minus_four_y) / .0001
         else:
             percent_height_diff = (minus_four_y_7_day - minus_four_y) / minus_four_y
             
-        if slope_total == 0:
-            percent_slope_diff = (slope_7_day - slope_total) / .0001
-        else:
-            percent_slope_diff = (slope_7_day - slope_total) / slope_total
+        slope_diff = slope_7_day - slope_total
 
         print("total slope: " + str(slope_total) + ", slope 7 day; " + str(slope_7_day))
-        print("percent slope_diff: " + str(percent_slope_diff))
+        print("slope diff: " + str(slope_diff))
 
         print("y total: " + str(minus_four_y) + ", 7 day y total: " + str(minus_four_y_7_day))
         print("percent height diff: " + str(percent_height_diff))
