@@ -9,12 +9,10 @@ from state_mortality_util import StateMortalityUtil
 class StateRankDpmUtil:
 
     state_mortality_util = None
-#    influx_api = None
     all_state_ranks_dpm = {}
 
     def __init__(self):
         self.state_mortality_util = StateMortalityUtil()
-#        self.influx_api = InfluxApi()
 
         all_state_daily_deaths = self.state_mortality_util.get_all_state_daily_deaths()
         for state_name in all_state_daily_deaths:
@@ -35,28 +33,7 @@ class StateRankDpmUtil:
     def get_all_state_ranks_dpm(self):
         return self.all_state_trends
 
-#     def clear_state_trends_from_influxdb(self):
-#         self.influx_api.delete_measurement("trend_daily_deaths")
 
-#     def add_state_trends_to_influxdb(self):
-#         for state_name in self.all_state_trends:
-#             state_trends = self.all_state_trends[state_name]
-#
-#             time_series = ""
-#             time_series += "trend_daily_deaths,"
-#             time_series += "name=" + string_util.canonical(state_name) + " "
-#             time_series += "value=" + str(state_trends["y_min"]) + " "
-#             time_series += state_trends["min_epoch"]
-#
-#             self.influx_api.write(time_series)
-#
-#             time_series = ""
-#             time_series += "trend_daily_deaths,"
-#             time_series += "name=" + string_util.canonical(state_name) + " "
-#             time_series += "value=" + str(state_trends["y_max"]) + " "
-#             time_series += state_trends["max_epoch"]
-#
-#             self.influx_api.write(time_series)
 
     def get_last_seven(self, state_daily_deaths):
         sorted_keys = sorted(state_daily_deaths.keys())
@@ -79,7 +56,3 @@ class StateRankDpmUtil:
                 sorted_states.insert(len(sorted_states), state_record)
 
         return sorted_states
-
-#         list.insert(i, x)
-#         Insert an item at a given position. The first argument is the index of the element before which to insert,
-#         so a.insert(0, x) inserts at the front of the list, and a.insert(len(a), x) is equivalent to a.append(x).
