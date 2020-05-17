@@ -17,7 +17,7 @@ class GrafanaApi:
         uid = "fH0__8eZk"
 
         url = GrafanaApi.GRAFANA_API_URL + "dashboards/home"
-        headers = {'Authorization': 'Bearer ' + grafana_api_key}
+        headers = {'Authorization': 'Bearer ' + self.grafana_api_key}
 
         print("query grafana: " + url)
         r = requests.get(url, headers=headers)
