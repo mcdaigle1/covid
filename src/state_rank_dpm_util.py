@@ -29,20 +29,16 @@ class StateRankDpmUtil:
                 self.all_state_ranks_dpm[state_name] = int(death_total) / int(population) * 1000000
 
     def update_grafana_dpm_dash(self):
-            sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
+        sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
 
-            panel_content = "\nStates ranked by death per million in the last seven days\n<br><br>\n\n"
+        panel_content = "\nStates ranked by death per million in the last seven days\n<br><br>\n\n"
 
-            for states_by_rank in reversed(sorted_states_by_rank) :
-                print(states_by_rank)
+        for states_by_rank in reversed(sorted_states_by_rank) :
+            print(states_by_rank)
          #   <a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/individual-state-data-view-multiple-charts-per-state?orgId=2&var-state=Arkansas\">Arkansas (50)</a><br>\n"
          #   <a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/individual-state-data-view-multiple-charts-per-state?orgId=2&var-state=Arkansas\">Kansas (25)</a><br>\n"
 
             panel_content += "\n\n"
-
-            dash_string = grafana_api.getDashByUid("cFA9bBgGk")
-            dash_json = json.loads(dash_string)
-            print(dash_json.dumps(dash_json)
 
         dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
