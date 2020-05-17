@@ -49,8 +49,7 @@ class StateRankDpmUtil:
         dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
         for panel in dash_json["dashboard"]["panels"]:
-            if panel["id"] = "2":
-                print("updated content")
+            if panel["id"] == 2:
                 panel["content"] = panel_content
         self.grafana_api.updateDash(json.dumps(dash_json))
 
