@@ -38,7 +38,7 @@ class StateRankDpmUtil:
             url = "<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
             url += "individual-state-data-view-multiple-charts-per-state?orgId=2&var-state="
             url += states_by_rank["canonical_name"] + "\">"
-            url += states_by_rank["state_name"] + " (" + str(states_by_rank["dpm"] / .001)
+            url += states_by_rank["state_name"] + " (" + str(round(states_by_rank["dpm"], 2))
             url += ")</a><br>\n"
 
             print(url)
