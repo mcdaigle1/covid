@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 from state_mortality_util import StateMortalityUtil
 from grafana_api import GrafanaApi
 
@@ -12,6 +13,7 @@ class StateRankDpmUtil:
     all_state_ranks_dpm = {}
 
     def __init__(self):
+        self.grafana_api = GrafanaApi()
         self.state_mortality_util = StateMortalityUtil()
 
         all_state_daily_deaths = self.state_mortality_util.get_all_state_daily_deaths()
@@ -27,13 +29,15 @@ class StateRankDpmUtil:
                 self.all_state_ranks_dpm[state_name] = int(death_total) / int(population) * 1000000
                 print("state: " + state_name + ", deaths/pop last week: " + str(self.all_state_ranks_dpm[state_name]))
         sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
-        for state in sorted_states_by_rank:
-            print(state)
+
+    def update_grafana_dpm_dash()
+        dash_string = grafana_api.getDashByUid("cFA9bBgGk")
+        dash_json = json.loads(dash_string)
+        print(dash_json.dumps(dash_json)
+
 
     def get_all_state_ranks_dpm(self):
         return self.all_state_trends
-
-
 
     def get_last_seven(self, state_daily_deaths):
         sorted_keys = sorted(state_daily_deaths.keys())
