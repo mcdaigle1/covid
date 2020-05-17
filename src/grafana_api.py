@@ -21,7 +21,7 @@ class GrafanaApi:
         r = requests.get(url, headers=headers)
         return r.text
 
-    def updateDashByUid(self, uid, json_string):
+    def updateDash(self, json_string):
 
         url = GrafanaApi.GRAFANA_API_URL + "dashboards/db"
         headers = {}
