@@ -3,5 +3,5 @@
 from grafana_api import GrafanaApi
 
 grafana_api = GrafanaApi()
-grafana_api.getDashByUid("fH0__8eZk")
+grafana_api.getDashByUid("cFA9bBgGk")
 
