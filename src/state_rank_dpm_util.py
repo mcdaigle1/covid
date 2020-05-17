@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+from string_util import string_util
 from state_mortality_util import StateMortalityUtil
 from grafana_api import GrafanaApi
 
@@ -62,7 +63,10 @@ class StateRankDpmUtil:
         sorted_states = []
 
         for state_name in all_state_ranks_dpm:
-            state_record = {"state_name" : state_name, "dpm" : float(all_state_ranks_dpm[state_name])}
+            state_record = {
+                "state_name" : state_name,
+                "dpm" : float(all_state_ranks_dpm[state_name])
+                "canonical_name" : string_util.canonical(state_name)}
             inserted = False
             for x in range(len(sorted_states)):
                 if state_record["dpm"] < sorted_states[x]["dpm"] and inserted == False:
