@@ -32,7 +32,7 @@ class StateRankDpmUtil:
     def update_grafana_dpm_dash(self):
         sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
 
-        panel_content = "\nStates ranked by death per million in the last seven days\n<br><br>\n\n"
+        panel_content = ""
 
         url_list = ""
         for states_by_rank in sorted_states_by_rank :
@@ -41,7 +41,7 @@ class StateRankDpmUtil:
             url += states_by_rank["canonical_name"] + "\">"
             url += states_by_rank["state_name"] + " (" + str(round(states_by_rank["dpm"], 2))
             url += ")</a><br>\n"
-            url_list = url + url_list + url
+            url_list = url + url_list
 
         print(url_list)
 
