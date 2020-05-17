@@ -16,3 +16,4 @@
 /home/mdaigle/covid/src/refresh_state_mortality.py
 /home/mdaigle/covid/src/refresh_state_trends.py
 /home/mdaigle/covid/src/refresh_state_trends_7_days.py
+/home/mdaigle/covid/src/refresh_state_rank_dpm.py

@@ -4,4 +4,3 @@ from state_rank_dpm_util import StateRankDpmUtil
 
 state_rank_dpm_util = StateRankDpmUtil()
 state_rank_dpm_util.update_grafana_dpm_dash()
-# state_rank_dpm_util.add_state_deltas_to_influxdb()
