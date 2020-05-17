@@ -35,7 +35,13 @@ class StateRankDpmUtil:
         panel_content = "\nStates ranked by death per million in the last seven days\n<br><br>\n\n"
 
         for states_by_rank in reversed(sorted_states_by_rank) :
-            print(states_by_rank)
+            url = "<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
+            url += "individual-state-data-view-multiple-charts-per-state?orgId=2&var-state="
+            url += states_by_rank["canonical_name"] + "\">"
+            url += states_by_rank["state_name"] + " (" + str(states_by_rank["dpm"] / .001)
+            url += ")</a><br>\n"
+
+            print(url)
          #   <a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/individual-state-data-view-multiple-charts-per-state?orgId=2&var-state=Arkansas\">Arkansas (50)</a><br>\n"
          #   <a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/individual-state-data-view-multiple-charts-per-state?orgId=2&var-state=Arkansas\">Kansas (25)</a><br>\n"
 
