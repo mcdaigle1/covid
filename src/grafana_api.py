@@ -14,9 +14,8 @@ class GrafanaApi:
         grafana_api_key = f.read()
 
     def getDashByUid(self, uid):
-        uid = "fH0__8eZk"
 
-        url = GrafanaApi.GRAFANA_API_URL + "dashboards/home"
+        url = GrafanaApi.GRAFANA_API_URL + "dashboards/uid/" + uid
         headers = {'Authorization': 'Bearer ' + self.grafana_api_key}
 
         print("query grafana: " + url)
