@@ -4,10 +4,10 @@ import json
 from state_mortality_util import StateMortalityUtil
 from grafana_api import GrafanaApi
 
-GRAFANA_DPM_DASH_UID = "cFA9bBgGk"
-
 # rank state deaths by Death Per Million
 class StateRankDpmUtil:
+
+    GRAFANA_DPM_DASH_UID = "cFA9bBgGk"
 
     state_mortality_util = None
     all_state_ranks_dpm = {}
@@ -29,12 +29,11 @@ class StateRankDpmUtil:
                 self.all_state_ranks_dpm[state_name] = int(death_total) / int(population) * 1000000
 
         sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
-        print(sorted_states_by_rank)
 
-    def update_grafana_dpm_dash()
-        dash_string = grafana_api.getDashByUid("cFA9bBgGk")
+    def update_grafana_dpm_dash(self):
+        dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
-        print(dash_json.dumps(dash_json)
+        print(json.dumps(dash_json["dashboard"]["panels"][0]["content"]))
 
     def get_all_state_ranks_dpm(self):
         return self.all_state_trends
