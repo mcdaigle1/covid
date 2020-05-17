@@ -14,10 +14,19 @@ class GrafanaApi:
         self.grafana_api_key = f.read().rstrip('\n')
 
     def getDashByUid(self, uid):
-
         url = GrafanaApi.GRAFANA_API_URL + "dashboards/uid/" + uid
         headers = {}
         headers["Authorization"] = 'Bearer ' + self.grafana_api_key
 
         r = requests.get(url, headers=headers)
         return r.text
+
+    def updateDashByUid(self, uid, json_string):
+
+        url = GrafanaApi.GRAFANA_API_URL + "dashboards/db"
+        headers = {}
+        headers["Authorization"] = 'Bearer ' + self.grafana_api_key
+        headers["Accept"] = "application/json"
+        headers["Content-Type"] = "application/json"
+
+        r = requests.post(url, headers=headers, data=json_string)

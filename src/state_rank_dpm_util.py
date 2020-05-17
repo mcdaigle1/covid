@@ -34,22 +34,22 @@ class StateRankDpmUtil:
 
         panel_content = "\nStates ranked by death per million in the last seven days\n<br><br>\n\n"
 
+        url_list = ""
         for states_by_rank in reversed(sorted_states_by_rank) :
             url = "<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
             url += "individual-state-data-view-multiple-charts-per-state?orgId=2&var-state="
             url += states_by_rank["canonical_name"] + "\">"
             url += states_by_rank["state_name"] + " (" + str(round(states_by_rank["dpm"], 2))
             url += ")</a><br>\n"
+        url_list = url + url_list
 
-            print(url)
-         #   <a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/individual-state-data-view-multiple-charts-per-state?orgId=2&var-state=Arkansas\">Arkansas (50)</a><br>\n"
-         #   <a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/individual-state-data-view-multiple-charts-per-state?orgId=2&var-state=Arkansas\">Kansas (25)</a><br>\n"
-
-            panel_content += "\n\n"
+        panel_content += url_list
+        panel_content += "\n\n"
 
         dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
-        print(json.dumps(dash_json["dashboard"]["panels"][0]["content"]))
+        dash_json["dashboard"]["panels"][0]["content"] = panel_content
+        self.grafana_api.updateDashByUid(json.dumps(dash_json))
 
     def get_all_state_ranks_dpm(self):
         return self.all_state_trends
