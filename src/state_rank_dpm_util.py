@@ -43,14 +43,15 @@ class StateRankDpmUtil:
             url += ")</a><br>\n"
             url_list = url + url_list
 
-        print(url_list)
-
         panel_content += url_list
         panel_content += "\n\n"
 
         dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
-        dash_json["dashboard"]["panels"][0]["content"] = panel_content
+        for panel in dash_json["dashboard"]["panels"]:
+            if panel["id"] = "2":
+                print("updated content")
+                panel["content"] = panel_content
         self.grafana_api.updateDash(json.dumps(dash_json))
 
     def get_all_state_ranks_dpm(self):
