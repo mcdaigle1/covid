@@ -32,7 +32,7 @@ class StateRankDpmUtil:
     def update_grafana_dpm_dash(self):
         sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
 
-        panel_content = ""
+        panel_content = "<br><br>"
 
         url_list = ""
         for states_by_rank in sorted_states_by_rank :
