@@ -32,11 +32,11 @@ class StateRankDpmUtil:
     def update_grafana_dpm_dash(self):
         sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_dpm)
 
-        panel_content = "<br><br>"
+        panel_content = "<br>"
 
         url_list = ""
         for states_by_rank in sorted_states_by_rank :
-            url = "<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
+            url = "&nbsp&nbsp&nbsp<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
             url += "individual-state-data-view-multiple-charts-per-state?orgId=2&var-state="
             url += states_by_rank["canonical_name"] + "\">"
             url += states_by_rank["state_name"] + " (" + str(round(states_by_rank["dpm"], 2))
