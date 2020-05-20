@@ -45,14 +45,14 @@ class StateAvg7DaysUtil:
         return self.all_state_avgs
 
     def clear_state_avg_7_day_from_influxdb(self):
-        self.influx_api.delete_measurement("state_avg_7_day")
+        self.influx_api.delete_measurement("daily_deaths_seven_day_avg")
 
     def add_state_avg_7_day_to_influxdb(self):
         for state_name in self.all_state_avgs:
             state_avgs = self.all_state_avgs[state_name]
 
             time_series = ""
-            time_series += "daily_deaths_seven_day_delta,"
+            time_series += "daily_deaths_seven_day_avg,"
             time_series += "name=" + string_util.canonical(state_name) + " "
             time_series += "mean_deaths=" + str(state_avgs["mean_deaths"]) + ","
             time_series += "fourth_from_last_trend_value=" + str(state_avgs["fourth_from_last_trend_value"]) + ","
