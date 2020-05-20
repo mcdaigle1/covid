@@ -37,34 +37,29 @@ class StateAvg7DaysUtil:
             self.all_state_avgs[state_name]["mean_deaths"] = mean_7_day_deaths
             self.all_state_avgs[state_name]["fourth_from_last_trend_value"] = fourth_from_last_trend_value
             self.all_state_avgs[state_name]["fourth_from_last_delta"] = fourth_from_last_delta
+            self.all_state_avgs[state_name]["epoch_date"] = fourth_from_last_epoch
 
         print(self.all_state_avgs)
 
-    def get_all_state_trends(self):
-        return self.all_state_trends
+    def get_all_state_avgs(self):
+        return self.all_state_avgs
 
-    def clear_state_trends_from_influxdb(self):
-        self.influx_api.delete_measurement("trend_daily_deaths_seven_day")
+    def clear_state_avg_7_day_from_influxdb(self):
+        self.influx_api.delete_measurement("state_avg_7_day")
 
-#    def add_state_trends_to_influxdb(self):
-#        for state_name in self.all_state_avgs:
-#            state_trends = self.all_state_trends[state_name]
-#
-#            time_series = ""
-#            time_series += "trend_daily_deaths_seven_day,"
-#            time_series += "name=" + string_util.canonical(state_name) + " "
-#            time_series += "value=" + str(state_trends["y_min"]) + " "
-#            time_series += state_trends["min_epoch"]
-#
-#            self.influx_api.write(time_series)
-#
-#            time_series = ""
-#            time_series += "trend_daily_deaths_seven_day,"
-#            time_series += "name=" + string_util.canonical(state_name) + " "
-#            time_series += "value=" + str(state_trends["y_max"]) + " "
-#            time_series += state_trends["max_epoch"]
-#
-#            self.influx_api.write(time_series)
+    def add_state_avg_7_day_to_influxdb(self):
+        for state_name in self.all_state_avgs:
+            state_avgs = self.all_state_avgs[state_name]
+
+            time_series = ""
+            time_series += "daily_deaths_seven_day_delta,"
+            time_series += "name=" + string_util.canonical(state_name) + " "
+            time_series += "mean_deaths=" + str(state_avgs["mean_deaths"]) + ","
+            time_series += "fourth_from_last_trend_value=" + str(state_avgs["fourth_from_last_trend_value"]) + ","
+            time_series += "fourth_from_last_delta=" + str(state_avgs["mean_deaths"]) + " "
+            time_series += str(state_avgs["epoch_date"])
+
+            self.influx_api.write(time_series)
 
     def mean_from_state_list(self, state_list, key):
         list_len = len(state_list)
