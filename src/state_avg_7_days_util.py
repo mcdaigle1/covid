@@ -5,7 +5,7 @@ from string_util import string_util
 from state_mortality_util import StateMortalityUtil
 from influx_api import InfluxApi
 
-class StateTrend7DaysUtil:
+class StateAvg7DaysUtil:
 
     state_mortality_util = None
     state_trend_util = None
