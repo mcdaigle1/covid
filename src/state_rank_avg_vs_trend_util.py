@@ -19,7 +19,10 @@ class StateRankAvgVsTrendUtil:
         self.state_avg_7_days_util = StateAvg7DaysUtil()
 
     def update_grafana_avg_vs_trend_dash(self):
-        sorted_states_by_rank = self.sort_all_states_by_rank(self.all_state_ranks_avg_vs_trend)
+        all_state_avgs = self.state_avg_7_days_util.get_all_state_avgs()
+        sorted_states_by_rank = self.sort_all_states_by_rank(all_state_avgs)
+
+        print("sorted_states_by_rank: " + str(sorted_states_by_rank))
 
         panel_content = "<br>"
 
@@ -36,7 +39,7 @@ class StateRankAvgVsTrendUtil:
         panel_content += url_list
         panel_content += "\n\n"
 
-        dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
+        dash_string = self.grafana_api.getDashByUid(StateRankAvgVsTrendUtil.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
         for panel in dash_json["dashboard"]["panels"]:
             if panel["id"] == 4:
@@ -58,9 +61,10 @@ class StateRankAvgVsTrendUtil:
 
         for state_name in all_state_ranks_avg_vs_trend:
             state_ranks_avg_vs_trend = all_state_ranks_avg_vs_trend[state_name]
+            print("state_ranks_avg_vs_trend" + str(state_ranks_avg_vs_trend))
             state_record = {
                 "state_name" : state_name,
-                "delta_percent" : float(state_ranks_avg_vs_trend[fourth_from_last_delta_percent]),
+                "delta_percent" : float(state_ranks_avg_vs_trend["fourth_from_last_delta_percent"]),
                 "canonical_name" : string_util.canonical(state_name)}
             inserted = False
             for x in range(len(sorted_states)):
