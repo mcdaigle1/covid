@@ -34,6 +34,10 @@ class StateAvg7DaysUtil:
             fourth_from_last_trend_value = self.state_trend_util.get_y_for_x(fourth_from_last_epoch, trend_slope, trend_y_intercept)
             fourth_from_last_delta = mean_7_day_deaths - fourth_from_last_trend_value
 
+            mean_vs_trend_percent_delta = fourth_from_last_delta / fourth_from_last_trend_value
+
+            print("state: " + state_name + ", % delta: " + str(mean_vs_trend_percent_delta))
+
             self.all_state_avgs[state_name]["mean_deaths"] = mean_7_day_deaths
             self.all_state_avgs[state_name]["fourth_from_last_trend_value"] = fourth_from_last_trend_value
             self.all_state_avgs[state_name]["fourth_from_last_delta"] = fourth_from_last_delta
@@ -56,7 +60,7 @@ class StateAvg7DaysUtil:
             time_series += "name=" + string_util.canonical(state_name) + " "
             time_series += "mean_deaths=" + str(state_avgs["mean_deaths"]) + ","
             time_series += "fourth_from_last_trend_value=" + str(state_avgs["fourth_from_last_trend_value"]) + ","
-            time_series += "fourth_from_last_delta=" + str(state_avgs["mean_deaths"]) + " "
+            time_series += "fourth_from_last_delta=" + str(state_avgs["fourth_from_last_delta"]) + " "
             time_series += str(state_avgs["epoch_date"])
 
             self.influx_api.write(time_series)
