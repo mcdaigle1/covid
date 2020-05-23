@@ -34,16 +34,21 @@ class StateAvg7DaysUtil:
             fourth_from_last_trend_value = self.state_trend_util.get_y_for_x(fourth_from_last_epoch, trend_slope, trend_y_intercept)
             fourth_from_last_delta = mean_7_day_deaths - fourth_from_last_trend_value
 
-            mean_vs_trend_percent_delta = fourth_from_last_delta / fourth_from_last_trend_value
+            # calculate delta percentage
+            if fourth_from_last_trend_value <= 0:
+                # cheat here if the trend line is at or below zero, just set the percent change from trend to whatever 
+                # the mean_7_day_deaths value is
+                mean_vs_trend_percent_delta = mean_7_day_deaths
+            else:
+                mean_vs_trend_percent_delta = fourth_from_last_delta / fourth_from_last_trend_value
 
             print("state: " + state_name + ", % delta: " + str(mean_vs_trend_percent_delta))
+            print("fourth_from_last_trend_value: " + str(fourth_from_last_trend_value))
 
             self.all_state_avgs[state_name]["mean_deaths"] = mean_7_day_deaths
             self.all_state_avgs[state_name]["fourth_from_last_trend_value"] = fourth_from_last_trend_value
             self.all_state_avgs[state_name]["fourth_from_last_delta"] = fourth_from_last_delta
             self.all_state_avgs[state_name]["epoch_date"] = fourth_from_last_epoch
-
-        print(self.all_state_avgs)
 
     def get_all_state_avgs(self):
         return self.all_state_avgs
