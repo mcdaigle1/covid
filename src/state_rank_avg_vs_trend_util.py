@@ -28,8 +28,9 @@ class StateRankAvgVsTrendUtil:
             url = "&nbsp&nbsp&nbsp<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
             url += "individual-state-data-view-multiple-charts-per-state?orgId=2&var-state="
             url += states_by_rank["canonical_name"] + "\">"
-            url += states_by_rank["state_name"] + " (" + str(round(states_by_rank["dpm"], 2))
-            url += ")</a><br>\n"
+            url += states_by_rank["state_name"]
+            url += " (" + str(round(states_by_rank["delta_percent"] * 100, 2))
+            url += "%)</a><br>\n"
             url_list = url + url_list
 
         panel_content += url_list
@@ -52,17 +53,18 @@ class StateRankAvgVsTrendUtil:
             seven_states[key] = state_daily_deaths[key]
         return seven_states
 
-    def sort_all_states_by_rank(self, all_state_ranks_dpm):
+    def sort_all_states_by_rank(self, all_state_ranks_avg_vs_trend):
         sorted_states = []
 
-        for state_name in all_state_ranks_dpm:
+        for state_name in all_state_ranks_avg_vs_trend:
+            state_ranks_avg_vs_trend = all_state_ranks_avg_vs_trend[state_name]
             state_record = {
                 "state_name" : state_name,
-                "dpm" : float(all_state_ranks_dpm[state_name]),
+                "delta_percent" : float(state_ranks_avg_vs_trend[fourth_from_last_delta_percent]),
                 "canonical_name" : string_util.canonical(state_name)}
             inserted = False
             for x in range(len(sorted_states)):
-                if state_record["dpm"] < sorted_states[x]["dpm"] and inserted == False:
+                if state_record["delta_percent"] < sorted_states[x]["delta_percent"] and inserted == False:
                     sorted_states.insert(x, state_record)
                     inserted = True
             if inserted == False:

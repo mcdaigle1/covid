@@ -42,12 +42,10 @@ class StateAvg7DaysUtil:
             else:
                 mean_vs_trend_percent_delta = fourth_from_last_delta / fourth_from_last_trend_value
 
-            print("state: " + state_name + ", % delta: " + str(mean_vs_trend_percent_delta))
-            print("fourth_from_last_trend_value: " + str(fourth_from_last_trend_value))
-
             self.all_state_avgs[state_name]["mean_deaths"] = mean_7_day_deaths
             self.all_state_avgs[state_name]["fourth_from_last_trend_value"] = fourth_from_last_trend_value
             self.all_state_avgs[state_name]["fourth_from_last_delta"] = fourth_from_last_delta
+            self.all_state_avgs[state_name]["fourth_from_last_delta_percent"] = mean_vs_trend_percent_delta
             self.all_state_avgs[state_name]["epoch_date"] = fourth_from_last_epoch
 
     def get_all_state_avgs(self):
