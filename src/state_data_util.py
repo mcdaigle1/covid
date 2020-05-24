@@ -6,9 +6,10 @@ from string_util import string_util
 from file_util import file_util
 from date_util import date_util
 from influx_api import InfluxApi
+from influx_base import InfluxBase
 from state_population import StatePopulation
 
-class StateDataUtil():
+class StateDataUtil(influx_base):
 
     data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 
@@ -64,8 +65,8 @@ class StateDataUtil():
     def get_all_state_data(self):
         return self.all_state_data
 
-    def clear_state_data_from_influxdb(self):
-        self.influx_api.delete_measurement("state_data")
+#     def clear_state_data_from_influxdb(self):
+#         self.influx_api.delete_measurement("state_data")
 
     def add_all_state_data_to_influxdb(self):
         for state_name in self.all_state_data:
