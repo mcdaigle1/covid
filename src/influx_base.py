@@ -2,10 +2,14 @@
 
 from influx_api import InfluxApi
 
-class (InfluxBase):
+class InfluxBase():
     measurement_name = ""
 
-    def clear_state_data_from_influxdb(self):
-        if measurement_name == ""
-            raise("measurement_name is empty")
-        self.influx_api.delete_measurement(measurement_name)
+    def __init__(self, measurement_name):
+        self.measurement_name = measurement_name
+
+    def clear_measurement(self):
+        if self.measurement_name == "":
+            raise Exception("measurement_name is empty")
+        print("Deleting measurement: " + self.measurement_name)
+        self.influx_api.delete_measurement(self.measurement_name)

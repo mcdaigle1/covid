@@ -2,7 +2,7 @@
 
 import json
 from string_util import string_util
-from state_trend_util import StateTrendsUtil
+from state_trend_util import StateTrendUtil
 from grafana_api import GrafanaApi
 
 # rank state deaths by Death Per Million
@@ -20,25 +20,27 @@ class StateRankTrendSlopeUtil:
         self.state_trend_util = StateTrendUtil()
 
     def update_grafana_trend_slope_dash(self):
-        all_state_trends = self.state_trend_util()
+        all_state_trends = self.state_trend_util.get_all_state_trends()
         sorted_states_by_rank = self.sort_all_states_by_rank(all_state_trends)
 
         panel_content = "<br>"
 
         url_list = ""
         for states_by_rank in sorted_states_by_rank :
+            print("state: " + states_by_rank["state_name"] + ", " + str(states_by_rank["slope"]))
+
             url = "&nbsp&nbsp&nbsp<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
             url += "individual-state-data-view-multiple-charts-per-state?orgId=2&var-state="
             url += states_by_rank["canonical_name"] + "\">"
             url += states_by_rank["state_name"]
-            url += " (" + str(round(states_by_rank["slope"] / StateRankTrendSlopeUtil.NANOSECONDS_IN_DAY, 2))
+            url += " (" + str(round(states_by_rank["slope"] * StateRankTrendSlopeUtil.NANOSECONDS_IN_DAY, 2))
             url += ")</a><br>\n"
             url_list = url + url_list
 
         panel_content += url_list
         panel_content += "\n\n"
 
-        dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
+        dash_string = self.grafana_api.getDashByUid(StateRankTrendSlopeUtil.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
         for panel in dash_json["dashboard"]["panels"]:
             if panel["id"] == 4:

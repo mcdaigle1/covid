@@ -9,7 +9,7 @@ from influx_api import InfluxApi
 from influx_base import InfluxBase
 from state_population import StatePopulation
 
-class StateDataUtil(influx_base):
+class StateDataUtil(InfluxBase):
 
     data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 
@@ -22,6 +22,7 @@ class StateDataUtil(influx_base):
         self.state_populations = StatePopulation()
         self.input_files = [f for f in glob.glob(self.data_dir + "*.csv")]
         self.influx_api = InfluxApi()
+        super().__init__("state_data")
 
         for input_file in self.input_files:
             first_line = True
