@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from state_rank_dpm_util import StateRankDpmUtil
+from gf_state_rank_dpm import GfStateRankDpm
 
-state_rank_dpm_util = StateRankDpmUtil()
-state_rank_dpm_util.update_grafana_dpm_dash()
+gf_state_rank_dpm = GfStateRankDpm()
+gf_state_rank_dpm.update_grafana_dpm_dash()

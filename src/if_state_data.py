@@ -9,7 +9,7 @@ from influx_api import InfluxApi
 from influx_base import InfluxBase
 from state_population import StatePopulation
 
-class StateDataUtil(InfluxBase):
+class IfStateData(InfluxBase):
 
     data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 
@@ -19,10 +19,10 @@ class StateDataUtil(InfluxBase):
     state_populations = None
 
     def __init__(self):
+        super().__init__("state_data")
         self.state_populations = StatePopulation()
         self.input_files = [f for f in glob.glob(self.data_dir + "*.csv")]
         self.influx_api = InfluxApi()
-        super().__init__("state_data")
 
         for input_file in self.input_files:
             first_line = True
@@ -65,9 +65,6 @@ class StateDataUtil(InfluxBase):
 
     def get_all_state_data(self):
         return self.all_state_data
-
-#     def clear_state_data_from_influxdb(self):
-#         self.influx_api.delete_measurement("state_data")
 
     def add_all_state_data_to_influxdb(self):
         for state_name in self.all_state_data:

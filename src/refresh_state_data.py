@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from state_data_util import StateDataUtil
+from if_state_data import IfStateData
 
-state_data_util = StateDataUtil()
-state_data_util.clear_measurement()
-state_data_util.add_all_state_data_to_influxdb()
+if_state_data = IfStateData()
+if_state_data.clear_measurement()
+if_state_data.add_all_state_data_to_influxdb()

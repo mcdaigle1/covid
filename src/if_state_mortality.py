@@ -2,22 +2,24 @@
 
 from string_util import string_util
 from influx_api import InfluxApi
-from state_data_util import StateDataUtil
+from influx_base import InfluxBase
+from if_state_data import IfStateData
 from state_population import StatePopulation
 
-class StateMortalityUtil():
+class IfStateMortality(InfluxBase):
 
     all_state_daily_deaths = {}
     influx_api = None
     state_populations = None
-    state_data_util = None
+    if_state_data = None
 
     def __init__(self):
+        super().__init__("daily_deaths")
         self.state_populations = StatePopulation()
-        self.state_data_util = StateDataUtil()
+        self.if_state_data = IfStateData()
         self.influx_api = InfluxApi()
 
-        all_state_data = self.state_data_util.get_all_state_data()
+        all_state_data = self.if_state_data.get_all_state_data()
         for state_name in all_state_data:
             self.all_state_daily_deaths[state_name] = {}
             first_row = True
@@ -37,9 +39,6 @@ class StateMortalityUtil():
 
     def get_all_state_daily_deaths(self):
         return self.all_state_daily_deaths
-
-    def clear_state_daily_deaths_from_influxdb(self):
-        self.influx_api.delete_measurement("daily_deaths")
 
     def add_all_state_deaths_to_influxdb(self):
         for state_name in self.all_state_daily_deaths:

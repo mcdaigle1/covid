@@ -9,7 +9,7 @@ from string_util import string_util
 from math_util import math_util
 from state_data import StateData
 from state_population import StatePopulation
-from state_trend_util import StateTrendUtil
+from if_state_trend import IfStateTrend
 
 data_dir = "/var/lib/covid/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports_us/"
 API_ENDPOINT = "http://localhost:8086/write?db=covid"
@@ -98,7 +98,7 @@ for state_name in all_state_daily_deaths:
 
 for state_name in all_state_daily_deaths:
     state_data = all_state_daily_deaths[state_name]
-    trend_util = StateTrendUtil(state_data)
+    trend_util = IfStateTrend(state_data)
 
     min_sortable_date = min(state_data.keys())
     min_y = trend_util.get_y_for_x(state_data[min_sortable_date]["epoch_date"])

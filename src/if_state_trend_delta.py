@@ -2,30 +2,32 @@
 
 # from math_util import math_util
 # from string_util import string_util
-from state_mortality_util import StateMortalityUtil
-from state_trend_util import StateTrendUtil
-from state_trend_7_days_util import StateTrend7DaysUtil
+from if_state_mortality import IfStateMortality
+from if_state_trend import IfStateTrend
+from if_state_trend_7_days import IfStateTrend7Days
 from influx_api import InfluxApi
+from influx_base import InfluxBase
 
 # Get the full and seven day trend data.  Do some comparisons and save in delta_daily_deaths measurement in influxdb.
 # The goal is to come up with some common delta values that we can use to determine if the changes in death rates per
 # state are significant.  We'll try to get a normalized delta value from:
 # -- relative height of 7 day trend vs full trend
 # -- differences in slope of 7 day trend vs full trend
-class StateTrendDeltaUtil:
+class IfStateTrendDelta(InfluxBase):
 
     all_state_deltas = {}
 
     def __init__(self):
-        state_mortality_util = StateMortalityUtil()
-        state_trend_util = StateTrendUtil()
-        state_trend_7_days_util = StateTrend7DaysUtil()
+        super().__init__("delta_daily_deaths")
+        if_state_mortality = IfStateMortality()
+        if_state_trend = IfStateTrend()
+        if_state_trend_7_days = IfStateTrend7Days()
 
         self.influx_api = InfluxApi()
 
-        all_state_daily_deaths = state_mortality_util.get_all_state_daily_deaths()
-        all_state_trends = state_trend_util.get_all_state_trends()
-        all_state_trends_7_days = state_trend_7_days_util.get_all_state_trends()
+        all_state_daily_deaths = if_state_mortality.get_all_state_daily_deaths()
+        all_state_trends = if_state_trend.get_all_state_trends()
+        all_state_trends_7_days = if_state_trend_7_days.get_all_state_trends()
 
         for state_name in all_state_trends:
             print("state: " + state_name)
@@ -39,11 +41,11 @@ class StateTrendDeltaUtil:
             daily_death_minus_four = state_daily_deaths[daily_deaths_minus_four_key]
             # Get the fourth from last y value for both the full and 7 day trend.  We do this because we want to
             # compare the middle of the 7 day trend with the same day on the full trend
-            trend_full_minus_four_y = state_trend_util.get_y_for_x(
+            trend_full_minus_four_y = if_state_trend.get_y_for_x(
                     daily_death_minus_four["epoch_date"], 
                     state_trends["slope"], 
                     state_trends["y_intercept"])
-            trend_7_days_minus_four_y = state_trend_7_days_util.get_y_for_x(
+            trend_7_days_minus_four_y = if_state_trend_7_days.get_y_for_x(
                     daily_death_minus_four["epoch_date"],
                     state_trends_7_days["slope"],
                     state_trends_7_days["y_intercept"])
@@ -65,9 +67,6 @@ class StateTrendDeltaUtil:
 
     def get_all_state_deltas(self):
         return self.all_state_deltas
-
-    def clear_state_deltas_from_influxdb(self):
-        self.influx_api.delete_measurement("delta_daily_deaths")
 
     def add_state_deltas_to_influxdb(self):
         for state_name in self.all_state_deltas:

@@ -2,23 +2,25 @@
 
 from math_util import math_util
 from string_util import string_util
-from state_mortality_util import StateMortalityUtil
-from state_trend_util import StateTrendUtil
+from if_state_mortality import IfStateMortality
+from if_state_trend import IfStateTrend
 from influx_api import InfluxApi
+from influx_base import InfluxBase
 
-class StateAvg7DaysUtil:
+class IfStateAvg7Days(InfluxBase):
 
-    state_mortality_util = None
-    state_trend_util = None
+    if_state_mortality = None
+    if_state_trend = None
     influx_api = None
     all_state_avgs = {}
 
     def __init__(self):
-        self.state_mortality_util = StateMortalityUtil()
-        self.state_trend_util = StateTrendUtil()
+        super().__init__("daily_deaths_seven_day_avg")
+        self.if_state_mortality = IfStateMortality()
+        self.if_state_trend = IfStateTrend()
         self.influx_api = InfluxApi()
 
-        all_state_daily_deaths = self.state_mortality_util.get_all_state_daily_deaths()
+        all_state_daily_deaths = self.if_state_mortality.get_all_state_daily_deaths()
         for state_name in all_state_daily_deaths:
             state_daily_death = all_state_daily_deaths[state_name]
             last_7_state_data = self.get_last_seven(state_daily_death)
@@ -27,11 +29,11 @@ class StateAvg7DaysUtil:
             mean_7_day_deaths = self.mean_from_state_list(last_7_state_data, "value")
             fourth_from_last_key = self.get_fourth_from_last_key(state_daily_death)
             fourth_from_last_epoch = state_daily_death[fourth_from_last_key]["epoch_date"]
-            trend_slope = self.state_trend_util.get_all_state_trends()[state_name]["slope"]
-            trend_y_intercept = self.state_trend_util.get_all_state_trends()[state_name]["y_intercept"]
+            trend_slope = self.if_state_trend.get_all_state_trends()[state_name]["slope"]
+            trend_y_intercept = self.if_state_trend.get_all_state_trends()[state_name]["y_intercept"]
 
-            all_state_trends = self.state_trend_util.get_all_state_trends()
-            fourth_from_last_trend_value = self.state_trend_util.get_y_for_x(fourth_from_last_epoch, trend_slope, trend_y_intercept)
+            all_state_trends = self.if_state_trend.get_all_state_trends()
+            fourth_from_last_trend_value = self.if_state_trend.get_y_for_x(fourth_from_last_epoch, trend_slope, trend_y_intercept)
             fourth_from_last_delta = mean_7_day_deaths - fourth_from_last_trend_value
 
             # calculate delta percentage
@@ -50,9 +52,6 @@ class StateAvg7DaysUtil:
 
     def get_all_state_avgs(self):
         return self.all_state_avgs
-
-    def clear_state_avg_7_day_from_influxdb(self):
-        self.influx_api.delete_measurement("daily_deaths_seven_day_avg")
 
     def add_state_avg_7_day_to_influxdb(self):
         for state_name in self.all_state_avgs:

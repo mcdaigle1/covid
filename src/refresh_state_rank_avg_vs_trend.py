@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from state_rank_avg_vs_trend_util import StateRankAvgVsTrendUtil
+from gf_state_rank_avg_vs_trend import GfStateRankAvgVsTrend
 
-state_rank_avg_vs_trend_util = StateRankAvgVsTrendUtil()
-state_rank_avg_vs_trend_util.update_grafana_avg_vs_trend_dash()
+gf_state_rank_avg_vs_trend = GfStateRankAvgVsTrend()
+gf_state_rank_avg_vs_trend.update_grafana_avg_vs_trend_dash()

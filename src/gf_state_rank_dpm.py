@@ -2,22 +2,22 @@
 
 import json
 from string_util import string_util
-from state_mortality_util import StateMortalityUtil
+from if_state_mortality import IfStateMortality
 from grafana_api import GrafanaApi
 
 # rank state deaths by Death Per Million
-class StateRankDpmUtil:
+class GfStateRankDpm:
 
     GRAFANA_DPM_DASH_UID = "cFA9bBgGk"
 
-    state_mortality_util = None
+    if_state_mortality = None
     all_state_ranks_dpm = {}
 
     def __init__(self):
         self.grafana_api = GrafanaApi()
-        self.state_mortality_util = StateMortalityUtil()
+        self.if_state_mortality = IfStateMortality()
 
-        all_state_daily_deaths = self.state_mortality_util.get_all_state_daily_deaths()
+        all_state_daily_deaths = self.if_state_mortality.get_all_state_daily_deaths()
         for state_name in all_state_daily_deaths:
             state_daily_deaths = all_state_daily_deaths[state_name]
             last_seven_state_deaths = self.get_last_seven(state_daily_deaths)
@@ -46,7 +46,7 @@ class StateRankDpmUtil:
         panel_content += url_list
         panel_content += "\n\n"
 
-        dash_string = self.grafana_api.getDashByUid(StateRankDpmUtil.GRAFANA_DPM_DASH_UID)
+        dash_string = self.grafana_api.getDashByUid(GfStateRankDpm.GRAFANA_DPM_DASH_UID)
         dash_json = json.loads(dash_string)
         for panel in dash_json["dashboard"]["panels"]:
             if panel["id"] == 2:

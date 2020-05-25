@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from state_mortality_util import StateMortalityUtil
+from if_state_mortality import IfStateMortality
 
-state_mortality_util = StateMortalityUtil()
-state_mortality_util.clear_state_daily_deaths_from_influxdb()
-state_mortality_util.add_all_state_deaths_to_influxdb()
+if_state_mortality = IfStateMortality()
+if_state_mortality.clear_measurements()
+if_state_mortality.add_all_state_deaths_to_influxdb()
