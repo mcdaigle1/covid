@@ -27,8 +27,6 @@ class GfStateRankTrendSlope:
 
         url_list = ""
         for states_by_rank in sorted_states_by_rank :
-            print("state: " + states_by_rank["state_name"] + ", " + str(states_by_rank["slope"]))
-
             url = "&nbsp&nbsp&nbsp<a href=\"http://covidgraf.com/grafana/d/fH0__8eZk/"
             url += "individual-state-data-view-multiple-charts-per-state?orgId=2&var-state="
             url += states_by_rank["canonical_name"] + "\">"
