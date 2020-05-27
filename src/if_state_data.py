@@ -43,7 +43,10 @@ class IfStateData(InfluxBase):
                             state_row["confirmed"] = row[5]
                             state_row["cum_deaths"] = row[6]
                             state_row["recovered"] = row[7]
-                            state_row["active"] = row[8]
+                            if row[8] == "":
+                                state_row["active"] = 0
+                            else:
+                                state_row["active"] = int(float(row[8]))
                             state_row["fips"] = row[9]
                             state_row["incident_rate"] = row[10]
                             state_row["people_tested"] = row[11]

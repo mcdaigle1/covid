@@ -22,8 +22,6 @@ class GfStateRankAvgVsTrend:
         all_state_avgs = self.if_state_avg_7_days.get_all_state_avgs()
         sorted_states_by_rank = self.sort_all_states_by_rank(all_state_avgs)
 
-        print("sorted_states_by_rank: " + str(sorted_states_by_rank))
-
         panel_content = "<br>"
 
         url_list = ""
@@ -61,7 +59,6 @@ class GfStateRankAvgVsTrend:
 
         for state_name in all_state_ranks_avg_vs_trend:
             state_ranks_avg_vs_trend = all_state_ranks_avg_vs_trend[state_name]
-            print("state_ranks_avg_vs_trend" + str(state_ranks_avg_vs_trend))
             state_record = {
                 "state_name" : state_name,
                 "delta_percent" : float(state_ranks_avg_vs_trend["fourth_from_last_delta_percent"]),

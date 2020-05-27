@@ -31,6 +31,7 @@ class IfStateCases(InfluxBase):
                 else:
                     cum_cases = int(state_data[sortable_date]["active"])
                     daily_cases = cum_cases - cum_cases_yesterday
+
                     self.all_state_daily_cases[state_name][sortable_date] = {}
                     self.all_state_daily_cases[state_name][sortable_date]["value"] = daily_cases
                     self.all_state_daily_cases[state_name][sortable_date]["population"] = str(self.state_populations.get_state_population(state_name))
