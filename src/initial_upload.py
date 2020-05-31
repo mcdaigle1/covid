@@ -5,7 +5,7 @@ import glob
 import requests
 from date_util import date_util
 from file_util import file_util
-from string_util import string_util
+from utils.string_util import StringUtil
 from math_util import math_util
 from state_data import StateData
 from state_population import StatePopulation
@@ -87,7 +87,7 @@ for state_name in all_state_daily_deaths:
     for sortable_date in sorted(state_daily_deaths.keys()):
         time_series = ""
         time_series += "daily_deaths,"
-        time_series += "name=" + string_util.canonical(state_name) + " "
+        time_series += "name=" + StringUtil.canonical(state_name) + " "
         time_series += "population=" + str(state_daily_deaths[sortable_date]["population"]) + ","
         time_series += "value=" + str(state_daily_deaths[sortable_date]["value"]) + " "
         time_series += state_daily_deaths[sortable_date]["epoch_date"] 
@@ -107,7 +107,7 @@ for state_name in all_state_daily_deaths:
 
     time_series = ""
     time_series += "trend_daily_deaths,"
-    time_series += "name=" + string_util.canonical(state_name) + " "
+    time_series += "name=" + StringUtil.canonical(state_name) + " "
     time_series += "value=" + str(min_y) + " "  
     time_series += state_data[min_sortable_date]["epoch_date"] 
 
@@ -117,7 +117,7 @@ for state_name in all_state_daily_deaths:
 
     time_series = ""
     time_series += "trend_daily_deaths,"
-    time_series += "name=" + string_util.canonical(state_name) + " "
+    time_series += "name=" + StringUtil.canonical(state_name) + " "
     time_series += "value=" + str(max_y) + " "
     time_series += state_data[max_sortable_date]["epoch_date"]
 

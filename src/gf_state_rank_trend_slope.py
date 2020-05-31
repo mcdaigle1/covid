@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import json
-from string_util import string_util
+from utils.string_util import StringUtil
 from if_state_trend import IfStateTrend
 from grafana_api import GrafanaApi
 
@@ -63,7 +63,7 @@ class GfStateRankTrendSlope:
             state_record = {
                 "state_name" : state_name,
                 "slope" : float(state_ranks_avg_vs_trend["slope"]),
-                "canonical_name" : string_util.canonical(state_name)}
+                "canonical_name" : StringUtil.canonical(state_name)}
             inserted = False
             for x in range(len(sorted_states)):
                 if state_record["slope"] < sorted_states[x]["slope"] and inserted == False:

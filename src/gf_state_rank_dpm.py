@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import json
-from string_util import string_util
+from utils.string_util import StringUtil
 from if_state_mortality import IfStateMortality
 from grafana_api import GrafanaApi
 
@@ -70,7 +70,7 @@ class GfStateRankDpm:
             state_record = {
                 "state_name" : state_name,
                 "dpm" : float(all_state_ranks_dpm[state_name]),
-                "canonical_name" : string_util.canonical(state_name)}
+                "canonical_name" : StringUtil.canonical(state_name)}
             inserted = False
             for x in range(len(sorted_states)):
                 if state_record["dpm"] < sorted_states[x]["dpm"] and inserted == False:

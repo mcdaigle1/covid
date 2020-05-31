@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import json
-from string_util import string_util
+from utils.string_util import StringUtil
 from if_state_avg_7_days import IfStateAvg7Days
 from grafana_api import GrafanaApi
 
@@ -62,7 +62,7 @@ class GfStateRankAvgVsTrend:
             state_record = {
                 "state_name" : state_name,
                 "delta_percent" : float(state_ranks_avg_vs_trend["fourth_from_last_delta_percent"]),
-                "canonical_name" : string_util.canonical(state_name)}
+                "canonical_name" : StringUtil.canonical(state_name)}
             inserted = False
             for x in range(len(sorted_states)):
                 if state_record["delta_percent"] < sorted_states[x]["delta_percent"] and inserted == False:

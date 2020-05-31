@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from math_util import math_util
-from string_util import string_util
+from utils.string_util import StringUtil
 from if_state_mortality import IfStateMortality
 from influx_api import InfluxApi
 from influx_base import InfluxBase
@@ -53,7 +53,7 @@ class IfStateTrend(InfluxBase):
 
             time_series = ""
             time_series += "trend_daily_deaths,"
-            time_series += "name=" + string_util.canonical(state_name) + " "
+            time_series += "name=" + StringUtil.canonical(state_name) + " "
             time_series += "value=" + str(state_trends["y_min"]) + " "
             time_series += state_trends["min_epoch"]
 
@@ -61,7 +61,7 @@ class IfStateTrend(InfluxBase):
 
             time_series = ""
             time_series += "trend_daily_deaths,"
-            time_series += "name=" + string_util.canonical(state_name) + " "
+            time_series += "name=" + StringUtil.canonical(state_name) + " "
             time_series += "value=" + str(state_trends["y_max"]) + " "
             time_series += state_trends["max_epoch"]
 

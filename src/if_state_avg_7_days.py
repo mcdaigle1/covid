@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from math_util import math_util
-from string_util import string_util
+from utils.string_util import StringUtil
 from if_state_mortality import IfStateMortality
 from if_state_trend import IfStateTrend
 from influx_api import InfluxApi
@@ -59,7 +59,7 @@ class IfStateAvg7Days(InfluxBase):
 
             time_series = ""
             time_series += "daily_deaths_seven_day_avg,"
-            time_series += "name=" + string_util.canonical(state_name) + " "
+            time_series += "name=" + StringUtil.canonical(state_name) + " "
             time_series += "mean_deaths=" + str(state_avgs["mean_deaths"]) + ","
             time_series += "fourth_from_last_trend_value=" + str(state_avgs["fourth_from_last_trend_value"]) + ","
             time_series += "fourth_from_last_delta=" + str(state_avgs["fourth_from_last_delta"]) + " "

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from string_util import string_util
+from utils.string_util import StringUtil
 from influx_api import InfluxApi
 from influx_base import InfluxBase
 from if_state_data import IfStateData
@@ -46,7 +46,7 @@ class IfStateMortality(InfluxBase):
             for sortable_date in sorted(state_daily_deaths.keys()):
                 time_series = ""
                 time_series += "daily_deaths,"
-                time_series += "name=" + string_util.canonical(state_name) + " "
+                time_series += "name=" + StringUtil.canonical(state_name) + " "
                 time_series += "population=" + str(state_daily_deaths[sortable_date]["population"]) + ","
                 time_series += "value=" + str(state_daily_deaths[sortable_date]["value"]) + " "
                 time_series += state_daily_deaths[sortable_date]["epoch_date"]

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-class string_util:
+class StringUtil:
 
     @staticmethod
     # convert a string to a canonical string
