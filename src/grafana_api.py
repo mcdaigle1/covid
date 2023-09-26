@@ -2,8 +2,8 @@
 
 import requests
 
-class GrafanaApi:
 
+class GrafanaApi:
     GRAFANA_API_LOCATION = "/etc/covid/grafana_api.cfg"
     GRAFANA_API_URL = "http://covidgraf.com/grafana/api/"
 
@@ -15,18 +15,14 @@ class GrafanaApi:
 
     def getDashByUid(self, uid):
         url = GrafanaApi.GRAFANA_API_URL + "dashboards/uid/" + uid
-        headers = {}
-        headers["Authorization"] = 'Bearer ' + self.grafana_api_key
+        headers = {"Authorization": 'Bearer ' + self.grafana_api_key}
 
         r = requests.get(url, headers=headers)
         return r.text
 
     def updateDash(self, json_string):
-
         url = GrafanaApi.GRAFANA_API_URL + "dashboards/db"
-        headers = {}
-        headers["Authorization"] = 'Bearer ' + self.grafana_api_key
-        headers["Accept"] = "application/json"
-        headers["Content-Type"] = "application/json"
+        headers = {"Authorization": 'Bearer ' + self.grafana_api_key, "Accept": "application/json",
+                   "Content-Type": "application/json"}
 
         r = requests.post(url, headers=headers, data=json_string)

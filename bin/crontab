@@ -1,0 +1,2 @@
+0 7 * * * /home/mdaigle/covid/bin/pull_covid_data.sh > /var/log/covid/pull_covid_data.log 2>&1
+0 8 * * * /home/mdaigle/covid/bin/refresh_covid_db.sh > /var/log/covid/refresh_covid_db.log 2>&1
